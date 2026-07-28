@@ -245,9 +245,17 @@ document.addEventListener('DOMContentLoaded', () => {
 // -----------------------------------------------
 // HERO IMAGE SLIDESHOW CONTROLLER (GSAP Luxury Fade)
 // -----------------------------------------------
+let globalHeroAutoplayTimer = null;
+
 function initHeroSlider() {
   const heroSection = document.getElementById('hero');
   if (!heroSection) return;
+
+  // Clean up any running autoplay timer before re-binding
+  if (globalHeroAutoplayTimer) {
+    clearInterval(globalHeroAutoplayTimer);
+    globalHeroAutoplayTimer = null;
+  }
 
   const slides = heroSection.querySelectorAll('.hero__slide');
   const dots = heroSection.querySelectorAll('.hero__dot');
@@ -257,7 +265,6 @@ function initHeroSlider() {
   if (slides.length <= 1) return;
 
   let currentIndex = 0;
-  let autoplayTimer = null;
   const INTERVAL_MS = 2000;
 
   // Initial slide setup with image zoom-out
@@ -349,52 +356,52 @@ function initHeroSlider() {
 
   function startAutoplay() {
     stopAutoplay();
-    autoplayTimer = setInterval(nextSlide, INTERVAL_MS);
+    globalHeroAutoplayTimer = setInterval(nextSlide, INTERVAL_MS);
   }
 
   function stopAutoplay() {
-    if (autoplayTimer) {
-      clearInterval(autoplayTimer);
-      autoplayTimer = null;
+    if (globalHeroAutoplayTimer) {
+      clearInterval(globalHeroAutoplayTimer);
+      globalHeroAutoplayTimer = null;
     }
   }
 
   if (nextBtn) {
-    nextBtn.addEventListener('click', (e) => {
+    nextBtn.onclick = (e) => {
       e.preventDefault();
       nextSlide();
       startAutoplay();
-    });
+    };
   }
 
   if (prevBtn) {
-    prevBtn.addEventListener('click', (e) => {
+    prevBtn.onclick = (e) => {
       e.preventDefault();
       prevSlide();
       startAutoplay();
-    });
+    };
   }
 
   dots.forEach((dot, i) => {
-    dot.addEventListener('click', (e) => {
+    dot.onclick = (e) => {
       e.preventDefault();
       showSlide(i);
       startAutoplay();
-    });
+    };
   });
 
-  // Touch Swipe Support for Mobile
+  // Touch Swipe Support for Mobile (Property binding prevents duplicate listeners)
   let touchStartX = 0;
   let touchEndX = 0;
 
-  heroSection.addEventListener('touchstart', e => {
+  heroSection.ontouchstart = e => {
     touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
+  };
 
-  heroSection.addEventListener('touchend', e => {
+  heroSection.ontouchend = e => {
     touchEndX = e.changedTouches[0].screenX;
     handleSwipe();
-  }, { passive: true });
+  };
 
   function handleSwipe() {
     const diff = touchEndX - touchStartX;
@@ -410,6 +417,10 @@ function initHeroSlider() {
 
   startAutoplay();
 }
+
+window.reinitHeroSlider = function() {
+  initHeroSlider();
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('loaded');
@@ -456,19 +467,21 @@ if (vogueWrap) {
 // -----------------------------------------------
 // GALLERY PAGE FILTERING & LIGHTBOX MODAL
 // -----------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
+function bindGalleryFilters() {
   const filterBtns = document.querySelectorAll('.gallery-filters .filter-btn');
   const galleryCards = document.querySelectorAll('.gallery-masonry .gallery-card');
   
   if (filterBtns.length > 0 && galleryCards.length > 0) {
     filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+      // Remove old listener if re-binding
+      btn.onclick = () => {
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         const filterValue = btn.getAttribute('data-filter');
+        const currentCards = document.querySelectorAll('.gallery-masonry .gallery-card');
         
-        galleryCards.forEach(card => {
+        currentCards.forEach(card => {
           const cardCategory = card.getAttribute('data-category');
           if (filterValue === 'all' || cardCategory === filterValue) {
             card.style.display = 'block';
@@ -488,9 +501,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
           }
         });
-      });
+      };
     });
   }
+}
+
+// Global UI re-initialization helper for dynamic Firestore card rendering
+window.reinitGalleryUI = function() {
+  // 1. Wrap unwrapped gallery images in shiny-wrapper
+  document.querySelectorAll('img:not(.nav__logo-img, .cursor__img, .home-about__logo, .video-badge img, .round-badge img)').forEach(el => {
+    if (el.closest('.hero__slide') || el.closest('.shiny-wrapper')) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'shiny-wrapper';
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+  });
+
+  // 2. Re-bind gallery filters
+  bindGalleryFilters();
+
+  // 3. Refresh animations & scroll physics
+  if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+  if (typeof lenis !== 'undefined') lenis.resize();
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  bindGalleryFilters();
 
   // LIGHTBOX MODAL LOGIC
   const lightbox = document.getElementById('galleryLightbox');
@@ -513,9 +549,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawCat = card.getAttribute('data-category') || 'Portfolio';
       const cat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
       const title = card.getAttribute('data-title') || (img ? img.alt : 'KVM Showcase');
+      const fullResUrl = card.getAttribute('data-full') || (img ? img.src : '');
       
-      if (img && lightboxImg) {
-        lightboxImg.src = img.src;
+      if (lightboxImg) {
+        lightboxImg.src = fullResUrl;
         lightboxImg.alt = title;
       }
       if (lightboxTitle) lightboxTitle.textContent = title;
@@ -541,8 +578,12 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = '';
     }
 
-    document.querySelectorAll('.gallery-card, .collage-item, .home-featured__item, .contact-split-media, .hero__image-wrapper, .editorial-image-wrapper').forEach(card => {
-      card.addEventListener('click', () => openLightbox(card));
+    // Delegation click listener to support both static and dynamic Firestore cards
+    document.addEventListener('click', (e) => {
+      const card = e.target.closest('.gallery-card, .collage-item, .home-featured__item, .contact-split-media, .hero__image-wrapper, .editorial-image-wrapper');
+      if (card && lightbox && !e.target.closest('.lightbox-modal')) {
+        openLightbox(card);
+      }
     });
 
     if (closeBtn) closeBtn.addEventListener('click', closeLightbox);

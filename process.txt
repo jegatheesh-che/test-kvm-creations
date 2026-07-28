@@ -39,5 +39,17 @@ Actions Taken:
 - Outlined user's plan and provided architecture recommendations for KVM Creations test admin panel.
 - Logged discussion to process.txt.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:21:16 IST]
+User Prompt: Configured Firebase (kvm-creation-studio) & Cloudinary (vfcl8vef) API keys and ADMIN_UID
+Actions Taken:
+- Created apis.txt in project root with public browser config and admin private config.
+- Installed /admin panel files (index.html, login.html, js/ managers).
+- Configured js/firebase-config.js with Firebase project kvm-creation-studio and ADMIN_UID.
+- Configured config/cloudinary-config.js with Cloud Name vfcl8vef and Upload Preset kvm_creations_gallery.
+- Set up api/delete-image.js serverless endpoint and vercel.json.
+
 ================================================================================
+
 

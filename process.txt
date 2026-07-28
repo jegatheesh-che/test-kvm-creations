@@ -191,13 +191,17 @@ Actions Taken:
 - Tested and confirmed live Firestore data loading for Gallery tab (27 items), Reviews tab (4 items), and About tab (3 sections).
 - Recorded full interaction session video.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 20:50:41 IST]
+User Prompt: brooooooo kidnly telll where the imgs are save. when i upload a img means website wont show it whyyyyyyy / fix
+Actions Taken:
+- Analyzed the issue: Admin panel uploads images to Cloudinary and saves URLs in Firestore, but the public gallery.html was completely static and didn't have a renderer script.
+- Created js/gallery-renderer.js to dynamically fetch and display gallery items from Firestore.
+- Updated gallery.html to include the new script.
+- Added logic for optimized Cloudinary URLs and YouTube thumbnail fetching.
+
 ================================================================================
-
-
-
-
-
-
 
 
 

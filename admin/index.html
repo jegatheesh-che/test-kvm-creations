@@ -3,884 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KVM Studio Admin — Gallery Manager</title>
+  <title>Admin Dashboard — KVM Creations Studio</title>
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+  <script src="/admin/js/theme-toggle.js"></script>
   <style>
-    :root {
-      --clr-gold: #d4af37;
-      --clr-gold-light: #f1d47e;
-      --clr-dark-bg: #0d0d0b;
-      --clr-sidebar-bg: #141411;
-      --clr-card-bg: #1a1a16;
-      --clr-card-border: rgba(212, 175, 55, 0.18);
-      --clr-text-main: #faf8f4;
-      --clr-text-muted: #a09d96;
-      --clr-hover: rgba(212, 175, 55, 0.12);
-      --clr-accent-green: #4caf50;
-      --clr-danger: #ff5252;
-      --sidebar-width: 260px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background-color: var(--clr-dark-bg);
-      color: var(--clr-text-main);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      overflow-x: hidden;
-    }
-
-    /* ------------------------------------------------
-       SIDEBAR NAVIGATION
-       ------------------------------------------------ */
-    .sidebar {
-      width: var(--sidebar-width);
-      background-color: var(--clr-sidebar-bg);
-      border-right: 1px solid var(--clr-card-border);
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 100;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .sidebar__brand {
-      padding: 24px 20px;
-      border-bottom: 1px solid var(--clr-card-border);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .sidebar__brand-title {
-      font-size: 1.25rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--clr-gold);
-      font-weight: 700;
-    }
-
-    .sidebar__brand-sub {
-      font-size: 0.72rem;
-      color: var(--clr-text-muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .sidebar__nav {
-      flex: 1;
-      padding: 20px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      overflow-y: auto;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      color: var(--clr-text-muted);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 500;
-      transition: background 0.2s, color 0.2s;
-      cursor: pointer;
-    }
-
-    .nav-item:hover {
-      background-color: var(--clr-hover);
-      color: var(--clr-text-main);
-    }
-
-    .nav-item.active {
-      background-color: rgba(212, 175, 55, 0.16);
-      color: var(--clr-gold-light);
-      border-left: 3px solid var(--clr-gold);
-      font-weight: 600;
-    }
-
-    .nav-item__icon {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-    }
-
-    .nav-item__badge {
-      margin-left: auto;
-      font-size: 0.65rem;
-      padding: 2px 8px;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--clr-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .sidebar__footer {
-      padding: 16px;
-      border-top: 1px solid var(--clr-card-border);
-    }
-
-    .logout-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 12px;
-      background: transparent;
-      border: 1px solid rgba(255, 82, 82, 0.35);
-      border-radius: 8px;
-      color: var(--clr-danger);
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
-    }
-
-    .logout-btn:hover {
-      background: rgba(255, 82, 82, 0.12);
-      border-color: var(--clr-danger);
-    }
-
-    /* ------------------------------------------------
-       MAIN CONTENT CONTAINER
-       ------------------------------------------------ */
-    .main-wrapper {
-      flex: 1;
-      margin-left: var(--sidebar-width);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      width: calc(100% - var(--sidebar-width));
-    }
-
-    .header-bar {
-      height: 70px;
-      background-color: var(--clr-sidebar-bg);
-      border-bottom: 1px solid var(--clr-card-border);
-      padding: 0 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .header-bar__left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .mobile-toggle {
-      display: none;
-      background: transparent;
-      border: none;
-      color: var(--clr-text-main);
-      cursor: pointer;
-      padding: 6px;
-    }
-
-    .header-bar__title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--clr-text-main);
-    }
-
-    .header-bar__right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .admin-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(212, 175, 55, 0.12);
-      border: 1px solid var(--clr-card-border);
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 0.78rem;
-    }
-
-    .admin-pill__status {
-      width: 8px;
-      height: 8px;
-      background: var(--clr-accent-green);
-      border-radius: 50%;
-    }
-
-    .admin-pill__email {
-      color: var(--clr-text-main);
-      font-weight: 500;
-    }
-
-    .content-body {
-      padding: 32px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      max-width: 1300px;
-    }
-
-    .tab-view {
-      display: none;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .tab-view.active {
-      display: flex;
-    }
-
-    /* Welcome Banner */
-    .welcome-banner {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(20, 20, 17, 0.8) 100%);
-      border: 1px solid var(--clr-card-border);
-      border-radius: 12px;
-      padding: 28px 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .welcome-banner h1 {
-      font-size: 1.4rem;
-      color: var(--clr-gold-light);
-      font-weight: 600;
-    }
-
-    .welcome-banner p {
-      font-size: 0.9rem;
-      color: var(--clr-text-muted);
-      line-height: 1.5;
-    }
-
-    /* Metric Overview Grid */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .metric-card {
-      background: var(--clr-card-bg);
-      border: 1px solid var(--clr-card-border);
-      border-radius: 10px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .metric-card__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .metric-card__title {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--clr-text-muted);
-    }
-
-    .metric-card__icon {
-      width: 20px;
-      height: 20px;
-      stroke: var(--clr-gold);
-      stroke-width: 2;
-      fill: none;
-    }
-
-    .metric-card__val {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--clr-text-main);
-    }
-
-    .metric-card__sub {
-      font-size: 0.75rem;
-      color: var(--clr-text-muted);
-    }
-
-    /* Module Standby Area Grid */
-    .modules-section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .section-heading {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--clr-text-main);
-      letter-spacing: 1px;
-    }
-
-    .placeholders-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-
-    .placeholder-card {
-      background: var(--clr-card-bg);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .placeholder-card__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .placeholder-card__title {
-      font-size: 0.98rem;
-      font-weight: 600;
-      color: var(--clr-gold-light);
-    }
-
-    .status-badge {
-      font-size: 0.68rem;
-      padding: 4px 10px;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--clr-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .placeholder-card__desc {
-      font-size: 0.84rem;
-      color: var(--clr-text-muted);
-      line-height: 1.5;
-    }
-
-    /* ------------------------------------------------
-       GALLERY MANAGER SPECIFIC STYLES
-       ------------------------------------------------ */
-    .action-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .primary-action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--clr-gold);
-      color: #000000;
-      border: none;
-      padding: 12px 22px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .primary-action-btn:hover {
-      background: var(--clr-gold-light);
-    }
-
-    .gallery-table-card {
-      background: var(--clr-card-bg);
-      border: 1px solid var(--clr-card-border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .gallery-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    .gallery-table th {
-      background: rgba(0, 0, 0, 0.4);
-      padding: 14px 18px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--clr-text-muted);
-      border-bottom: 1px solid var(--clr-card-border);
-    }
-
-    .gallery-table td {
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      vertical-align: middle;
-      font-size: 0.88rem;
-    }
-
-    .gallery-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .table-thumb {
-      width: 64px;
-      height: 64px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid var(--clr-card-border);
-    }
-
-    .table-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 50px;
-      font-size: 0.72rem;
-      background: rgba(212, 175, 55, 0.12);
-      color: var(--clr-gold-light);
-      text-transform: capitalize;
-    }
-
-    .action-cell {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn-edit {
-      background: transparent;
-      border: 1px solid var(--clr-card-border);
-      color: var(--clr-gold-light);
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-edit:hover {
-      background: rgba(212, 175, 55, 0.15);
-    }
-
-    .btn-delete {
-      background: transparent;
-      border: 1px solid rgba(255, 82, 82, 0.3);
-      color: var(--clr-danger);
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-delete:hover {
-      background: rgba(255, 82, 82, 0.15);
-    }
-
-    /* Modal Dialog */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(4px);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.open {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--clr-card-bg);
-      border: 1px solid var(--clr-card-border);
-      border-radius: 12px;
-      width: 100%;
-      max-width: 520px;
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    }
-
-    .modal-card__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-card__title {
-      font-size: 1.2rem;
-      color: var(--clr-gold-light);
-      font-weight: 600;
-    }
-
-    .modal-close {
-      background: transparent;
-      border: none;
-      color: var(--clr-text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-group label {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--clr-text-muted);
-    }
-
-    .form-control {
-      padding: 12px 14px;
-      background: #000000;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 6px;
-      color: #ffffff;
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    .form-control:focus {
-      border-color: var(--clr-gold);
-    }
-
-    .modal-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--clr-text-main);
-      padding: 10px 18px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      cursor: pointer;
-    }
-
-    .empty-state {
-      padding: 60px 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .empty-state__title {
-      font-size: 1.1rem;
-      color: var(--clr-text-main);
-    }
-
-    .empty-state__desc {
-      font-size: 0.85rem;
-      color: var(--clr-text-muted);
-      max-width: 360px;
-    }
-
-    /* Toast Notification */
-    .admin-toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--clr-card-bg);
-      border: 1px solid var(--clr-gold);
-      color: var(--clr-text-main);
-      padding: 14px 22px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      z-index: 300;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.3s, transform 0.3s;
-      pointer-events: none;
-    }
-
-    .admin-toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 95;
-    }
-
-    @media (max-width: 992px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .sidebar-overlay.open { display: block; }
-      .main-wrapper { margin-left: 0; width: 100%; }
-      .mobile-toggle { display: block; }
-      .header-bar { padding: 0 20px; }
-      .content-body { padding: 20px; }
-      .gallery-table th:nth-child(4), .gallery-table td:nth-child(4) { display: none; }
-    }
+    /* Prevent content flash before auth check completes */
+    body { visibility: hidden; opacity: 0; transition: opacity 0.2s ease; }
+    body.auth-ready { visibility: visible; opacity: 1; }
   </style>
 </head>
 <body>
-
-  <!-- MOBILE BACKDROP OVERLAY -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-  <!-- SIDEBAR NAVIGATION -->
-  <aside class="sidebar" id="sidebar">
-    
-    <div class="sidebar__brand">
-      <span class="sidebar__brand-title">KVM Studio</span>
-      <span class="sidebar__brand-sub">Admin CMS Control Panel</span>
-    </div>
-
-    <nav class="sidebar__nav">
-      
-      <a class="nav-item active" data-tab="dashboard">
-        <svg class="nav-item__icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        <span>Dashboard</span>
-      </a>
-
-      <a class="nav-item" data-tab="gallery">
-        <svg class="nav-item__icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-        <span>Gallery</span>
-        <span class="nav-item__badge">Active CMS</span>
-      </a>
-
-      <a class="nav-item" data-tab="hero">
-        <svg class="nav-item__icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-        <span>Hero / Slider</span>
-        <span class="nav-item__badge">Active CMS</span>
-      </a>
-
-      <a class="nav-item" data-tab="testimonials">
-        <svg class="nav-item__icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-        <span>Testimonials</span>
-        <span class="nav-item__badge">Active CMS</span>
-      </a>
-
-      <a class="nav-item" data-tab="about">
-        <svg class="nav-item__icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span>About / Content</span>
-        <span class="nav-item__badge">Standby</span>
-      </a>
-
-      <a class="nav-item" data-tab="inquiries">
-        <svg class="nav-item__icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-        <span>Inquiries</span>
-        <span class="nav-item__badge">Standby</span>
-      </a>
-
-      <a class="nav-item" data-tab="settings">
-        <svg class="nav-item__icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span>Settings</span>
-        <span class="nav-item__badge">Standby</span>
-      </a>
-
-    </nav>
-
-    <div class="sidebar__footer">
-      <button class="logout-btn" id="logoutBtn">
-        <svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-        <span>Sign Out</span>
-      </button>
-    </div>
-
-  </aside>
-
-  <!-- MAIN WORKSPACE -->
-  <div class="main-wrapper">
-    
-    <!-- TOP HEADER BAR -->
-    <header class="header-bar">
-      <div class="header-bar__left">
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Sidebar Navigation">
-          <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
-        <span class="header-bar__title" id="pageTitle">Dashboard Overview</span>
+  <div class="admin-dashboard-wrapper">
+    <header class="admin-header">
+      <div class="admin-header__brand">
+        <h1 style="font-size: 1.4rem; letter-spacing: 1px; text-transform: uppercase; color: var(--clr-accent, #c9a96e);">KVM Creations Admin</h1>
       </div>
 
-      <div class="header-bar__right">
-        <div class="admin-pill">
-          <span class="admin-pill__status"></span>
-          <span class="admin-pill__email" id="userEmailDisplay">Loading Admin...</span>
-        </div>
+      <div class="admin-header__user">
+        <button type="button" id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+          <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span id="themeToggleLabel">Dark</span>
+        </button>
+        <span id="userEmail" class="admin-header__email">Loading...</span>
+        <button id="logoutBtn" class="btn-logout">Logout</button>
       </div>
     </header>
 
-    <!-- CONTENT BODY CONTAINER -->
-    <main class="content-body">
-      
-      <!-- 1. DASHBOARD VIEW TAB -->
-      <div class="tab-view active" id="view-dashboard">
-        <section class="welcome-banner">
-          <h1>Welcome to KVM Studio Admin</h1>
-          <p>Authentication and Admin Authorization verified (`D4Etoi6NL0YUX80wtQgO77YlZ1W2`). The Gallery Manager, Hero Manager, and Testimonials Manager are live and connected to Firestore and Cloudinary (`vfcl8vef`).</p>
-        </section>
-
-        <section class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-card__header">
-              <span class="metric-card__title">Gallery Assets</span>
-              <svg class="metric-card__icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            </div>
-            <div class="metric-card__val" id="metricGalleryCount">0</div>
-            <div class="metric-card__sub">Firestore collection photos</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-card__header">
-              <span class="metric-card__title">Hero Slides</span>
-              <svg class="metric-card__icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-            </div>
-            <div class="metric-card__val" id="metricHeroCount">0</div>
-            <div class="metric-card__sub">Slideshow configuration</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-card__header">
-              <span class="metric-card__title">Testimonials</span>
-              <svg class="metric-card__icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            </div>
-            <div class="metric-card__val" id="metricTestimonialsCount">0</div>
-            <div class="metric-card__sub">Client stories &amp; reviews</div>
-          </div>
-
-          <div class="metric-card">
-            <div class="metric-card__header">
-              <span class="metric-card__title">Client Inquiries</span>
-              <svg class="metric-card__icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            </div>
-            <div class="metric-card__val">0</div>
-            <div class="metric-card__sub">Inquiry inbox standby</div>
-          </div>
-        </section>
+    <main class="admin-main">
+      <div class="admin-welcome-card">
+        <h2>Welcome to KVM Creations Studio Admin Panel</h2>
+        <p>You have successfully authenticated. Manage your portfolio gallery items, customer reviews, and site sections below.</p>
       </div>
 
-      <!-- 2. GALLERY MANAGER TAB VIEW -->
-      <div class="tab-view" id="view-gallery">
-        <div class="action-bar">
+      <!-- ADMIN NAVIGATION TABS (DESKTOP + MOBILE APP BOTTOM BAR) -->
+      <nav class="admin-nav-tabs" id="adminNavTabs">
+        <button type="button" class="admin-tab-btn active" id="tabGallery">
+          <svg class="admin-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <span>Gallery</span>
+        </button>
+        
+        <button type="button" class="admin-tab-btn" id="tabReviews">
+          <svg class="admin-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Reviews</span>
+        </button>
+        
+        <button type="button" class="admin-tab-btn" id="tabAbout">
+          <svg class="admin-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>About Page</span>
+        </button>
+      </nav>
+
+      <!-- SECTION: GALLERY MANAGER -->
+      <section class="admin-gallery-manager" id="sectionGallery">
+        <header class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <h2 class="section-heading">Portfolio Gallery Assets</h2>
-            <p style="font-size:0.84rem;color:var(--clr-text-muted);margin-top:4px;">Manage gallery photos stored in Firestore `gallery` collection and Cloudinary (`kvm_creations_gallery`).</p>
+            <h2>Gallery Manager</h2>
+            <p>Current visual archive displayed dynamically from Firestore.</p>
           </div>
-          <button class="primary-action-btn" id="openAddModalBtn">
-            <span>+ Add New Photo</span>
-          </button>
+          <button id="btnAddNew" class="btn-primary" style="margin-top: 0;">+ Add New Gallery Item</button>
+        </header>
+
+        <div id="adminGalleryLoading" class="admin-gallery-grid">
+          <div class="admin-gallery-item skeleton-card">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-info"><div class="skeleton-text skeleton-title"></div></div>
+          </div>
         </div>
 
-        <div class="gallery-table-card" id="galleryContainer">
-          <!-- Dynamically populated by gallery-manager.js -->
+        <div id="adminGalleryError" class="admin-error-state" style="display: none;"></div>
+        
+        <div id="adminGalleryEmpty" class="admin-empty-state" style="display: none;">
+          <p>No gallery items found.</p>
         </div>
-      </div>
 
-      <!-- 3. HERO SLIDER MANAGER TAB VIEW -->
-      <div class="tab-view" id="view-hero">
-        <div class="action-bar">
+        <div id="adminGalleryGrid" class="admin-gallery-grid" style="display: none;"></div>
+      </section>
+
+      <!-- SECTION: REVIEWS MANAGER -->
+      <section class="admin-reviews-manager" id="sectionReviews" style="display: none;">
+        <header class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <h2 class="section-heading">Hero Slider Assets</h2>
-            <p style="font-size:0.84rem;color:var(--clr-text-muted);margin-top:4px;">Manage full-screen homepage slides stored in Firestore `hero_slides` collection (`kvm_creations_gallery`).</p>
+            <h2>Reviews & Testimonials Manager</h2>
+            <p>Customer reviews, star ratings, and stories displayed on the website.</p>
           </div>
-          <button class="primary-action-btn" id="openAddHeroModalBtn">
-            <span>+ Add Hero Slide</span>
-          </button>
+          <button id="btnAddNewReview" class="btn-primary" style="margin-top: 0;">+ Add New Review</button>
+        </header>
+
+        <div id="adminReviewsLoading" class="admin-reviews-grid">
+          <div class="admin-review-card skeleton-card">
+            <div class="skeleton-text skeleton-title"></div>
+            <div class="skeleton-text skeleton-meta"></div>
+          </div>
         </div>
 
-        <div class="gallery-table-card" id="heroContainer">
-          <!-- Dynamically populated by hero-manager.js -->
+        <div id="adminReviewsError" class="admin-error-state" style="display: none;"></div>
+        
+        <div id="adminReviewsEmpty" class="admin-empty-state" style="display: none;">
+          <p>No reviews found. Click "+ Add New Review" to publish your first customer testimonial.</p>
         </div>
-      </div>
 
-      <!-- 4. TESTIMONIALS MANAGER TAB VIEW -->
-      <div class="tab-view" id="view-testimonials">
-        <div class="action-bar">
+        <div id="adminReviewsGrid" class="admin-reviews-grid" style="display: none;"></div>
+      </section>
+
+      <!-- SECTION: ABOUT PAGE DYNAMIC SECTION BUILDER (MAX 10 SECTIONS) -->
+      <section class="admin-about-manager" id="sectionAbout" style="display: none;">
+        <header class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
-            <h2 class="section-heading">Client Testimonials Assets</h2>
-            <p style="font-size:0.84rem;color:var(--clr-text-muted);margin-top:4px;">Manage client reviews and stories stored in Firestore `testimonials` collection (`kvm_creations_gallery`).</p>
+            <h2>About Page Story Builder</h2>
+            <p>Create, customize, reorder, and manage up to 10 story sections for your About page.</p>
           </div>
-          <button class="primary-action-btn" id="openAddTestimonialModalBtn">
-            <span>+ Add Testimonial</span>
-          </button>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span id="adminAboutSectionCounter" style="font-size: 0.9rem; color: var(--clr-gold); font-weight: 600;">0 / 10 Sections</span>
+            <button type="button" id="btnAddAboutSection" class="btn-primary" style="margin-top: 0;">+ Add New Section</button>
+          </div>
+        </header>
+
+        <div id="adminAboutLoading" class="admin-empty-state" style="display: none;">
+          <p>Loading About page content...</p>
         </div>
 
-        <div class="gallery-table-card" id="testimonialsContainer">
-          <!-- Dynamically populated by testimonials-manager.js -->
-        </div>
-      </div>
+        <form id="aboutContentForm" class="admin-form" style="display: flex; flex-direction: column; gap: 24px;">
+          <div id="adminAboutSectionsContainer" style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Dynamic Section Cards Rendered via admin-about.js -->
+          </div>
 
-      <!-- 5. OTHER STANDBY TABS VIEW -->
-      <div class="tab-view" id="view-standby">
-        <section class="welcome-banner">
-          <h1 id="standbyTabTitle">Standby Module</h1>
-          <p id="standbyTabDesc">This module will be connected in a future development step.</p>
-        </section>
-      </div>
+          <div id="aboutFormError" class="auth-error-msg" style="display: none;"></div>
 
+          <div class="about-submit-wrapper" style="margin-top: 16px; display: flex; justify-content: center; align-items: center; width: 100%;">
+            <button type="submit" id="aboutSubmitBtn" class="btn-primary" style="padding: 16px 40px; font-size: 1rem; margin: 0 auto; text-align: center;">Save All About Sections</button>
+          </div>
+        </form>
+      </section>
     </main>
-
   </div>
 
-  <!-- ADD / EDIT GALLERY PHOTO MODAL DIALOG -->
-  <div class="modal-overlay" id="galleryModal">
-    <div class="modal-card">
-      <div class="modal-card__header">
-        <h3 class="modal-card__title" id="modalTitle">Add Portfolio Photo</h3>
-        <button class="modal-close" id="closeModalBtn">&times;</button>
-      </div>
-
-      <form id="galleryForm">
-        <input type="hidden" id="editDocId" value="" />
-
-        <div class="form-group" id="fileGroup">
-          <label for="photoFile">Select Image File *</label>
-          <input type="file" id="photoFile" class="form-control" accept="image/*" />
+  <!-- MODALS -->
+  <!-- GALLERY MODAL -->
+  <dialog id="galleryModal" class="admin-modal">
+    <div class="admin-modal__content">
+      <header class="admin-modal__header">
+        <h3 id="galleryModalTitle">Add New Item</h3>
+        <button type="button" class="admin-modal__close" id="galleryModalClose">&times;</button>
+      </header>
+      <form id="galleryForm" class="admin-form">
+        <input type="hidden" id="galleryId" />
+        
+        <div class="form-group">
+          <label for="galleryTitle">Title *</label>
+          <input type="text" id="galleryTitle" required placeholder="e.g., Eternal Romance Film" />
         </div>
 
         <div class="form-group">
-          <label for="photoTitle">Photo Title *</label>
-          <input type="text" id="photoTitle" class="form-control" placeholder="e.g. The First Glance" required />
-        </div>
-
-        <div class="form-group">
-          <label for="photoCategory">Category *</label>
-          <select id="photoCategory" class="form-control" required>
+          <label for="galleryCategory">Category *</label>
+          <select id="galleryCategory" required class="admin-select">
+            <option value="" disabled selected>Select Category</option>
             <option value="weddings">Weddings</option>
+            <option value="films">Films</option>
             <option value="portraits">Portraits</option>
             <option value="destinations">Destinations</option>
             <option value="editorial">Editorial</option>
@@ -888,137 +188,164 @@
         </div>
 
         <div class="form-group">
-          <label for="photoTilt">Card Tilt Style</label>
-          <select id="photoTilt" class="form-control">
-            <option value="">None (Standard)</option>
-            <option value="gallery-card--tilt-left">Tilt Left</option>
-            <option value="gallery-card--tilt-right">Tilt Right</option>
+          <label for="galleryMediaType">Media Type *</label>
+          <select id="galleryMediaType" required class="admin-select">
+            <option value="image" selected>Image</option>
+            <option value="video">Video (YouTube)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="groupImageUpload">
+          <label for="galleryImage">Image File <span id="galleryImageAsterisk">*</span></label>
+          <input type="file" id="galleryImage" accept="image/*" />
+          <p class="admin-modal__hint" id="galleryImageHint">Select a WebP or JPEG image to upload.</p>
+        </div>
+
+        <div class="form-group" id="groupYoutubeId" style="display: none;">
+          <label for="galleryYoutubeId">YouTube ID or Link *</label>
+          <input type="text" id="galleryYoutubeId" placeholder="e.g., https://youtube.com/shorts/CvuAlcbzDxw or 8iX_PxT9P-g" />
+          <p class="admin-modal__hint">Paste YouTube video link or 11-character video ID.</p>
+        </div>
+
+        <div id="galleryFormError" class="auth-error-msg" style="display: none; margin-top: 10px;"></div>
+
+        <div class="admin-modal__actions">
+          <button type="button" class="btn-secondary" id="galleryModalCancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="galleryModalSubmit">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- REVIEWS MODAL -->
+  <dialog id="reviewModal" class="admin-modal">
+    <div class="admin-modal__content">
+      <header class="admin-modal__header">
+        <h3 id="reviewModalTitle">Add Customer Review</h3>
+        <button type="button" class="admin-modal__close" id="reviewModalClose">&times;</button>
+      </header>
+      <form id="reviewForm" class="admin-form">
+        <input type="hidden" id="reviewId" />
+        
+        <div class="form-group">
+          <label for="reviewName">Customer / Couple Name *</label>
+          <input type="text" id="reviewName" required placeholder="e.g., Sophie & Antoine" />
+        </div>
+
+        <div class="form-group">
+          <label for="reviewSubtitle">Location & Event Context *</label>
+          <input type="text" id="reviewSubtitle" required placeholder="e.g., Brussels, Belgium • Wedding" />
+        </div>
+
+        <div class="form-group">
+          <label for="reviewStars">Star Rating *</label>
+          <select id="reviewStars" required class="admin-select">
+            <option value="5" selected>⭐⭐⭐⭐⭐ (5 Stars)</option>
+            <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+            <option value="3">⭐⭐⭐ (3 Stars)</option>
+            <option value="2">⭐⭐ (2 Stars)</option>
+            <option value="1">⭐ (1 Star)</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="photoOrder">Sort Order (Number)</label>
-          <input type="number" id="photoOrder" class="form-control" value="1" min="1" required />
-        </div>
-
-        <div class="modal-actions">
-          <button type="button" class="btn-secondary" id="cancelModalBtn">Cancel</button>
-          <button type="submit" class="primary-action-btn" id="savePhotoBtn">
-            <span id="saveBtnText">Upload &amp; Save Photo</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ADD / EDIT HERO SLIDE MODAL DIALOG -->
-  <div class="modal-overlay" id="heroModal">
-    <div class="modal-card">
-      <div class="modal-card__header">
-        <h3 class="modal-card__title" id="heroModalTitle">Add Hero Slide</h3>
-        <button class="modal-close" id="closeHeroModalBtn">&times;</button>
-      </div>
-
-      <form id="heroForm">
-        <input type="hidden" id="editHeroDocId" value="" />
-        <input type="hidden" id="editHeroOldPublicId" value="" />
-
-        <div class="form-group" id="heroFileGroup">
-          <label for="heroSlideFile">Select Widescreen Hero Image *</label>
-          <input type="file" id="heroSlideFile" class="form-control" accept="image/*" />
-        </div>
-
-        <div class="form-group">
-          <label for="heroSlideTitle">Slide Title *</label>
-          <input type="text" id="heroSlideTitle" class="form-control" placeholder="e.g. Radiant Essence" required />
-        </div>
-
-        <div class="form-group">
-          <label for="heroSlideOrder">Sort Order (Number)</label>
-          <input type="number" id="heroSlideOrder" class="form-control" value="1" min="1" required />
-        </div>
-
-        <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
-          <input type="checkbox" id="heroSlideIsActive" checked style="width: 18px; height: 18px; accent-color: var(--clr-gold);" />
-          <label for="heroSlideIsActive" style="text-transform: none; font-size: 0.9rem; color: #ffffff; cursor: pointer;">Active on Homepage</label>
-        </div>
-
-        <div class="modal-actions">
-          <button type="button" class="btn-secondary" id="cancelHeroModalBtn">Cancel</button>
-          <button type="submit" class="primary-action-btn" id="saveHeroSlideBtn">
-            <span id="saveHeroBtnText">Upload &amp; Save Slide</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ADD / EDIT TESTIMONIAL MODAL DIALOG -->
-  <div class="modal-overlay" id="testimonialModal">
-    <div class="modal-card">
-      <div class="modal-card__header">
-        <h3 class="modal-card__title" id="testimonialModalTitle">Add Client Testimonial</h3>
-        <button class="modal-close" id="closeTestimonialModalBtn">&times;</button>
-      </div>
-
-      <form id="testimonialForm">
-        <input type="hidden" id="editTestimonialDocId" value="" />
-        <input type="hidden" id="editTestimonialOldPublicId" value="" />
-
-        <div class="form-group" id="testimonialFileGroup">
-          <label for="testimonialAvatarFile">Client Avatar Image *</label>
-          <input type="file" id="testimonialAvatarFile" class="form-control" accept="image/*" />
-        </div>
-
-        <div class="form-group">
-          <label for="testimonialClientName">Client Name(s) *</label>
-          <input type="text" id="testimonialClientName" class="form-control" placeholder="e.g. Maya & Julian" required />
-        </div>
-
-        <div class="form-group">
-          <label for="testimonialDetail">Category &amp; Location Detail *</label>
-          <input type="text" id="testimonialDetail" class="form-control" placeholder="e.g. Toronto Wedding &bull; Casa Loma" required />
-        </div>
-
-        <div class="form-group">
-          <label for="testimonialRating">Rating Stars *</label>
-          <select id="testimonialRating" class="form-control" required>
-            <option value="5" selected>5 Stars (★★★★★)</option>
-            <option value="4">4 Stars (★★★★☆)</option>
-            <option value="3">3 Stars (★★★☆☆)</option>
-            <option value="2">2 Stars (★★☆☆☆)</option>
-            <option value="1">1 Star (★☆☆☆☆)</option>
+          <label for="reviewCategory">Category Filter *</label>
+          <select id="reviewCategory" required class="admin-select">
+            <option value="wedding" selected>Wedding</option>
+            <option value="film">Cinematic Film</option>
+            <option value="portrait">Portrait</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="testimonialReviewText">Review Text Quote *</label>
-          <textarea id="testimonialReviewText" class="form-control" rows="4" placeholder="Enter full client review..." required style="resize: vertical; min-height: 90px;"></textarea>
+          <label for="reviewText">Customer Feedback / Review Quote *</label>
+          <textarea id="reviewText" required class="admin-textarea" rows="4" placeholder="Write what customer actually says..."></textarea>
         </div>
 
         <div class="form-group">
-          <label for="testimonialOrder">Sort Order (Number)</label>
-          <input type="number" id="testimonialOrder" class="form-control" value="1" min="1" required />
+          <label for="reviewBadge">Client Badge / Tag</label>
+          <input type="text" id="reviewBadge" placeholder="e.g., Verified Couple" defaultValue="Verified Client" />
         </div>
 
-        <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px;">
-          <input type="checkbox" id="testimonialIsActive" checked style="width: 18px; height: 18px; accent-color: var(--clr-gold);" />
-          <label for="testimonialIsActive" style="text-transform: none; font-size: 0.9rem; color: #ffffff; cursor: pointer;">Active on Website</label>
+        <div class="form-group">
+          <label for="reviewAvatar">Customer Photo / Avatar (Optional)</label>
+          <input type="file" id="reviewAvatar" accept="image/*" />
+          <p class="admin-modal__hint">Upload a portrait image or leave empty for default avatar.</p>
         </div>
 
-        <div class="modal-actions">
-          <button type="button" class="btn-secondary" id="cancelTestimonialModalBtn">Cancel</button>
-          <button type="submit" class="primary-action-btn" id="saveTestimonialBtn">
-            <span id="saveTestimonialBtnText">Upload &amp; Save Testimonial</span>
-          </button>
+        <div id="reviewFormError" class="auth-error-msg" style="display: none; margin-top: 10px;"></div>
+
+        <div class="admin-modal__actions">
+          <button type="button" class="btn-secondary" id="reviewModalCancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="reviewModalSubmit">Save Review</button>
         </div>
       </form>
     </div>
-  </div>
+  </dialog>
 
-  <!-- TOAST NOTIFICATION -->
-  <div class="admin-toast" id="adminToast">Action completed successfully</div>
+  <!-- DELETE GALLERY ITEM MODAL -->
+  <dialog id="deleteModal" class="admin-modal">
+    <div class="admin-modal__content">
+      <header class="admin-modal__header">
+        <h3>Confirm Deletion</h3>
+        <button type="button" class="admin-modal__close" id="deleteModalClose">&times;</button>
+      </header>
+      <div class="admin-modal__body">
+        <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+        <p id="deleteItemTitle" style="margin-top: 8px; font-weight: 600; color: var(--clr-gold);"></p>
+        <div id="deleteModalError" class="auth-error-msg" style="display: none; margin-top: 16px;"></div>
+      </div>
+      <div class="admin-modal__actions">
+        <button type="button" class="btn-secondary" id="deleteModalCancel">Cancel</button>
+        <button type="button" class="btn-primary btn-danger" id="deleteModalConfirm">Delete Permanently</button>
+      </div>
+    </div>
+  </dialog>
 
-  <script type="module" src="js/admin-dashboard.js"></script>
+  <!-- DELETE REVIEW MODAL -->
+  <dialog id="deleteReviewModal" class="admin-modal">
+    <div class="admin-modal__content">
+      <header class="admin-modal__header">
+        <h3>Confirm Review Deletion</h3>
+        <button type="button" class="admin-modal__close" id="deleteReviewModalClose">&times;</button>
+      </header>
+      <div class="admin-modal__body">
+        <p>Are you sure you want to delete this review? This action cannot be undone.</p>
+        <p id="deleteReviewItemTitle" style="margin-top: 8px; font-weight: 600; color: var(--clr-gold);"></p>
+        <div id="deleteReviewModalError" class="auth-error-msg" style="display: none; margin-top: 16px;"></div>
+      </div>
+      <div class="admin-modal__actions">
+        <button type="button" class="btn-secondary" id="deleteReviewModalCancel">Cancel</button>
+        <button type="button" class="btn-primary btn-danger" id="deleteReviewModalConfirm">Delete Review</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- APP-LIKE ACTION POPUP NOTIFICATION MODAL WITH ANIMATED SVG TICK -->
+  <dialog id="appActionPopup" class="admin-modal app-action-modal">
+    <div class="admin-modal__content app-action-content">
+      <div class="app-action-icon-wrapper" id="popupIconWrapper">
+        <!-- SVG Animated Tick (Success / Add / Edit) -->
+        <svg class="svg-tick-icon" id="svgTickIcon" viewBox="0 0 52 52">
+          <circle class="svg-tick-circle" cx="26" cy="26" r="23" fill="none"/>
+          <path class="svg-tick-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+        <!-- SVG Animated Cross (Delete) -->
+        <svg class="svg-cross-icon" id="svgCrossIcon" viewBox="0 0 52 52" style="display: none;">
+          <circle class="svg-cross-circle" cx="26" cy="26" r="23" fill="none"/>
+          <path class="svg-cross-line1" fill="none" d="M16 16l20 20"/>
+          <path class="svg-cross-line2" fill="none" d="M36 16l-20 20"/>
+        </svg>
+      </div>
+      <h3 id="popupTitle" class="app-action-title">Action Completed</h3>
+      <p id="popupMessage" class="app-action-message">Your changes have been saved.</p>
+      <button type="button" class="btn-primary app-action-btn" id="popupBtnClose">Awesome</button>
+    </div>
+  </dialog>
+
+  <script type="module" src="/admin/js/admin-dashboard.js"></script>
+  <script type="module" src="/admin/js/admin-gallery.js"></script>
+  <script type="module" src="/admin/js/admin-reviews.js"></script>
+  <script type="module" src="/admin/js/admin-about.js"></script>
 </body>
 </html>

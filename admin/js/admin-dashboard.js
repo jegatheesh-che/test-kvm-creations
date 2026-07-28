@@ -176,3 +176,30 @@ window.showToast = function(message, type = "success", duration = 3500) {
   closeBtn.addEventListener("click", dismissToast);
   setTimeout(dismissToast, duration);
 };
+
+// ================================================
+// MOBILE FLOATING ACTION BUTTON (FAB) CONTROLLER
+// ================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const fabBtn = document.getElementById("adminMobileFab");
+  if (!fabBtn) return;
+
+  fabBtn.addEventListener("click", () => {
+    // Check which section is currently active
+    const sectionGallery = document.getElementById("sectionGallery");
+    const sectionReviews = document.getElementById("sectionReviews");
+    const sectionAbout = document.getElementById("sectionAbout");
+
+    if (sectionGallery && sectionGallery.style.display !== "none") {
+      const btnAddGallery = document.getElementById("btnAddNew");
+      if (btnAddGallery) btnAddGallery.click();
+    } else if (sectionReviews && sectionReviews.style.display !== "none") {
+      const btnAddReview = document.getElementById("btnAddNewReview");
+      if (btnAddReview) btnAddReview.click();
+    } else if (sectionAbout && sectionAbout.style.display !== "none") {
+      const btnAddAbout = document.getElementById("btnAddAboutSection");
+      if (btnAddAbout) btnAddAbout.click();
+    }
+  });
+});
+

@@ -162,12 +162,22 @@
         </form>
       </section>
     </main>
+
+    <!-- MOBILE FLOATING ACTION BUTTON (FAB) FOR QUICK APP ACTIONS -->
+    <button type="button" id="adminMobileFab" class="admin-mobile-fab" aria-label="Quick Add Action">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      <span class="admin-mobile-fab__tooltip">Add New</span>
+    </button>
   </div>
 
   <!-- MODALS -->
   <!-- GALLERY MODAL -->
   <dialog id="galleryModal" class="admin-modal">
     <div class="admin-modal__content">
+      <div class="modal-drag-handle"></div>
       <header class="admin-modal__header">
         <h3 id="galleryModalTitle">Add New Item</h3>
         <button type="button" class="admin-modal__close" id="galleryModalClose">&times;</button>
@@ -225,6 +235,7 @@
   <!-- REVIEWS MODAL -->
   <dialog id="reviewModal" class="admin-modal">
     <div class="admin-modal__content">
+      <div class="modal-drag-handle"></div>
       <header class="admin-modal__header">
         <h3 id="reviewModalTitle">Add Customer Review</h3>
         <button type="button" class="admin-modal__close" id="reviewModalClose">&times;</button>
@@ -291,6 +302,7 @@
   <!-- DELETE GALLERY ITEM MODAL -->
   <dialog id="deleteModal" class="admin-modal">
     <div class="admin-modal__content">
+      <div class="modal-drag-handle"></div>
       <header class="admin-modal__header">
         <h3>Confirm Deletion</h3>
         <button type="button" class="admin-modal__close" id="deleteModalClose">&times;</button>
@@ -310,6 +322,7 @@
   <!-- DELETE BULK GALLERY ITEMS MODAL -->
   <dialog id="deleteBulkModal" class="admin-modal">
     <div class="admin-modal__content">
+      <div class="modal-drag-handle"></div>
       <header class="admin-modal__header">
         <h3>Confirm Bulk Deletion</h3>
         <button type="button" class="admin-modal__close" id="deleteBulkModalClose">&times;</button>
@@ -328,6 +341,7 @@
   <!-- DELETE REVIEW MODAL -->
   <dialog id="deleteReviewModal" class="admin-modal">
     <div class="admin-modal__content">
+      <div class="modal-drag-handle"></div>
       <header class="admin-modal__header">
         <h3>Confirm Review Deletion</h3>
         <button type="button" class="admin-modal__close" id="deleteReviewModalClose">&times;</button>

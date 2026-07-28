@@ -58,7 +58,17 @@ Actions Taken:
 - Updated api/delete-image.js to support direct in-project fallbacks for CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET.
 - Updated project configuration so all API credentials can be stored directly within project codebase files.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:24:46 IST]
+User Prompt: Firebase Firestore Rules configuration for Admin Panel security
+Actions Taken:
+- Created firestore.rules defining read/write permissions for gallery, testimonials, reviews, hero, about, and contacts collections.
+- Secured write operations using Admin UID D4Etoi6NL0YUX80wtQgO77YlZ1W2.
+- Provided instructions for publishing rules in Firebase Console.
+
 ================================================================================
+
 
 
 

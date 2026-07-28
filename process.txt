@@ -92,7 +92,16 @@ Actions Taken:
 - Updated vercel.json to enable cleanUrls: true and added explicit route rewrites for /admin/login -> /admin/login.html.
 - Added asset caching and security headers matching Project 1 Vercel routing rules.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:36:30 IST]
+User Prompt: Diagnose "Failed to load gallery items" error in Admin Panel
+Actions Taken:
+- Updated admin/js/admin-gallery.js to print exact Firestore exception message and error code to UI.
+- Provided troubleshooting steps for Firestore Database creation and rules verification.
+
 ================================================================================
+
 
 
 

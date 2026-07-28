@@ -95,7 +95,13 @@ async function loadGalleryItems() {
     console.error("[Admin Gallery] Error fetching gallery items:", error);
     loadingState.style.display = "none";
     errorState.style.display = "block";
-    errorState.textContent = "Failed to load gallery items. Please try refreshing.";
+    const detailMsg = error.message || error.code || "Unknown error";
+    errorState.innerHTML = `
+      <strong>Failed to load gallery items:</strong> ${detailMsg}<br/>
+      <small style="opacity: 0.8; margin-top: 4px; display: inline-block;">
+        Ensure Firestore Database is created in Firebase Console (kvm-creation-studio) and rules are published.
+      </small>
+    `;
   }
 }
 

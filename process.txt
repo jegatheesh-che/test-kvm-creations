@@ -84,7 +84,16 @@ Actions Taken:
 - Updated Cloudinary configuration in admin-gallery.js to Cloud Name vfcl8vef and Upload Preset kvm_creations_gallery.
 - Tailored admin/index.html and admin/login.html header and title text for KVM Creations Studio.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:33:44 IST]
+User Prompt: Resolve 404 NOT_FOUND error when attempting to navigate to /admin/login
+Actions Taken:
+- Updated vercel.json to enable cleanUrls: true and added explicit route rewrites for /admin/login -> /admin/login.html.
+- Added asset caching and security headers matching Project 1 Vercel routing rules.
+
 ================================================================================
+
 
 
 

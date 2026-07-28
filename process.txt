@@ -211,7 +211,15 @@ Actions Taken:
 - Implemented bulk deletion logic in admin/js/admin-gallery.js using Promise.all to handle multiple Cloudinary image deletions (/api/delete-image) and Firestore document deletions efficiently.
 - Added a confirmation modal for bulk deletions.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 21:52:00 IST]
+User Prompt: kindly analyse the about page and about admin page also / proper fix
+Actions Taken:
+- Identified data synchronization bug (renderer was using "main", admin was using "content").
+- Completely rewrote js/about-renderer.js to fetch from "content" and dynamically generate up to 10 HTML sections.
+- Updated about.html to use dynamic anchor divs instead of hardcoded sections.
+- Integrated the "See More" expanding text functionality natively into the dynamic renderer to support unlimited new sections.
+- Verified functionality via local server and automated browser testing.
+
 ================================================================================
-
-
-

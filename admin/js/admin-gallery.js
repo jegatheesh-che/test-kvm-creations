@@ -77,9 +77,64 @@ async function loadGalleryItems() {
 
     currentGalleryItems.sort((a, b) => (a.order || 0) - (b.order || 0));
 
+const DEFAULT_SEED_GALLERY = [
+  { title: "The First Glance", category: "weddings", mediaType: "image", image: "assets/images/img1.webp", order: 1 },
+  { title: "Elegance in Motion", category: "portraits", mediaType: "image", image: "assets/images/img2.webp", order: 2 },
+  { title: "Moroccan Sunrise", category: "destinations", mediaType: "image", image: "assets/images/img3.webp", order: 3 },
+  { title: "Vogue Whispers", category: "editorial", mediaType: "image", image: "assets/images/img4.webp", order: 4 },
+  { title: "Sacred Vows", category: "weddings", mediaType: "image", image: "assets/images/img5.webp", order: 5 },
+  { title: "Alpine Serenade", category: "destinations", mediaType: "image", image: "assets/images/img6.webp", order: 6 },
+  { title: "Gilded Shadows", category: "portraits", mediaType: "image", image: "assets/images/img7.webp", order: 7 },
+  { title: "Monochrome Solitude", category: "editorial", mediaType: "image", image: "assets/images/img8.webp", order: 8 },
+  { title: "Royal Celebration", category: "weddings", mediaType: "image", image: "assets/images/img9.webp", order: 9 },
+  { title: "Subtle Intimacy", category: "portraits", mediaType: "image", image: "assets/images/img10.webp", order: 10 },
+  { title: "Icelandic Breeze", category: "destinations", mediaType: "image", image: "assets/images/img11.webp", order: 11 },
+  { title: "Golden Hour Grace", category: "editorial", mediaType: "image", image: "assets/images/img12.webp", order: 12 },
+  { title: "Forever Yours", category: "weddings", mediaType: "image", image: "assets/images/img13.webp", order: 13 },
+  { title: "Radiant Essence", category: "portraits", mediaType: "image", image: "assets/images/img14.webp", order: 14 },
+  { title: "Amalfi Sunset", category: "destinations", mediaType: "image", image: "assets/images/img15.webp", order: 15 },
+  { title: "Velvet Dusk", category: "editorial", mediaType: "image", image: "assets/images/img16.webp", order: 16 },
+  { title: "Unconditional Promise", category: "weddings", mediaType: "image", image: "assets/images/img17.webp", order: 17 },
+  { title: "Poetic Silence", category: "portraits", mediaType: "image", image: "assets/images/img18.webp", order: 18 },
+  { title: "Highland Majesty", category: "destinations", mediaType: "image", image: "assets/images/img19.webp", order: 19 },
+  { title: "Architectural Form", category: "editorial", mediaType: "image", image: "assets/images/img20.webp", order: 20 },
+  { title: "Bridal Majesty", category: "weddings", mediaType: "image", image: "assets/images/img21.webp", order: 21 },
+  { title: "Timeless Gaze", category: "portraits", mediaType: "image", image: "assets/images/img22.webp", order: 22 },
+  { title: "Desert Mirage", category: "destinations", mediaType: "image", image: "assets/images/img23.webp", order: 23 },
+  { title: "Modern Nostalgia", category: "editorial", mediaType: "image", image: "assets/images/img24.webp", order: 24 },
+  { title: "First Dance Romance", category: "weddings", mediaType: "image", image: "assets/images/img25.webp", order: 25 },
+  { title: "Santorini Horizons", category: "destinations", mediaType: "image", image: "assets/images/img28.webp", order: 26 },
+  { title: "Expressive Soul", category: "portraits", mediaType: "image", image: "assets/images/img30.webp", order: 27 }
+];
+
+async function seedDefaultGallery() {
+  try {
+    loadingState.style.display = "grid";
+    emptyState.style.display = "none";
+    for (const item of DEFAULT_SEED_GALLERY) {
+      const newRef = doc(collection(db, "gallery"));
+      await setDoc(newRef, { ...item, createdAt: serverTimestamp() });
+    }
+    await loadGalleryItems();
+    if (window.showAppPopup) {
+      window.showAppPopup("Gallery Seeded", "🎉 Successfully imported 27 KVM Creations portfolio items into database!", "success");
+    }
+  } catch (err) {
+    console.error("[Admin Gallery] Seed Error:", err);
+    alert("Failed to seed default gallery items: " + err.message);
+    loadGalleryItems();
+  }
+}
+
     if (currentGalleryItems.length === 0) {
       loadingState.style.display = "none";
       emptyState.style.display = "block";
+      emptyState.innerHTML = `
+        <p>No gallery items found in KVM Creations database.</p>
+        <button type="button" id="btnSeedGallery" class="btn-primary" style="margin-top: 14px;">+ Import KVM Portfolio Photos (27 Items)</button>
+      `;
+      const btnSeed = document.getElementById("btnSeedGallery");
+      if (btnSeed) btnSeed.addEventListener("click", seedDefaultGallery);
       return;
     }
 

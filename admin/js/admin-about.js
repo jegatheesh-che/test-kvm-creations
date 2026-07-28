@@ -7,9 +7,9 @@ import { auth, db } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Cloudinary Configuration
-const CLOUD_NAME = "dxbdobdxt";
-const UPLOAD_PRESET = "website_gallery";
+// Cloudinary Configuration (KVM Creations)
+const CLOUD_NAME = "vfcl8vef";
+const UPLOAD_PRESET = "kvm_creations_gallery";
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 // Max Sections Limit
@@ -35,28 +35,28 @@ const sectionCounter = document.getElementById("adminAboutSectionCounter");
 // State: List of About Page Sections (Max 10)
 let sectionsList = [];
 
-// Clean Default Initial Sections
+// KVM Creations Mathu & Vithu Default Initial Sections
 const DEFAULT_SECTIONS = [
   {
     id: "sec_hero",
-    eyebrow: "About Me",
-    title: "Every story deserves to be remembered.",
-    desc: "My journey into photography and filmmaking began in 2018, when I discovered that a single photograph could preserve a feeling forever and a single video could bring those emotions back to life. What started as a passion quickly became my purpose.\n\nOver the years, I have honed my artistic vision across Belgium, France, and international luxury destinations, blending documentary realism with high-fashion magazine styling to craft heirloom portraits.",
-    imageUrl: "/assets/images/r_DSC00241_full.webp"
+    eyebrow: "Visual Storytellers & Cinematographers",
+    title: "About KVM Creations",
+    desc: "We are Mathu & Vithu, wedding photographers and cinematographers at KVM Creations with a passion for telling love stories through timeless visuals.\n\nTogether, we bring photography and wedding cinematography under one roof—preserving every celebration through both heartfelt images and cinematic films that reflect each couple’s story in an authentic, genuine way.",
+    imageUrl: "assets/about/about.webp"
   },
   {
-    id: "sec_philosophy",
-    eyebrow: "My Philosophy",
-    title: "Genuine Moments — Authentic Emotions",
-    desc: "Since then, I have dedicated myself to capturing genuine moments, authentic emotions, and meaningful stories. For me, photography and videography are not just about creating beautiful images—they are about preserving memories that will be treasured for generations.\n\nOne of the things I value most is the connection I build with every client. I believe the best moments happen when people feel comfortable, understood, and truly themselves.\n\nThat's why I take the time to listen, understand your vision, and create an experience that feels natural, relaxed, and enjoyable from beginning to end.",
-    imageUrl: "/assets/images/excellents/DSC08698-2.webp"
+    id: "sec_mathu",
+    eyebrow: "Wedding Photographer & Cinematographer",
+    title: "Hi, I’m Mathu",
+    desc: "I’m Mathu, a wedding photographer and cinematographer with a passion for telling love stories through timeless visuals. I began my photography journey in 2019 and expanded into wedding cinematography in 2022, allowing me to preserve every celebration through both heartfelt images and cinematic films.\n\nI believe every couple has a unique story, and my goal is to capture genuine emotions, meaningful moments, and the little details that make your day unforgettable.",
+    imageUrl: "assets/about/mathu.webp"
   },
   {
-    id: "sec_journey",
-    eyebrow: "My Journey",
-    title: "Growth & Dedication",
-    desc: "Every wedding, event, portrait, and celebration has taught me something new. Each client has helped shape my creative journey, and every experience has made me a better photographer, filmmaker, and storyteller.\n\nMy goal is simple: to create timeless photographs and cinematic films that allow you to relive your most precious moments exactly as they felt.\n\nWhen you choose to work with me, you’re choosing someone who genuinely cares about your story, values your memories, and is committed to capturing them with creativity, passion, and authenticity.",
-    imageUrl: "/assets/images/excellents/slide4.webp"
+    id: "sec_vithu",
+    eyebrow: "Wedding Cinematographer & Photographer",
+    title: "Hi, I’m Vithu",
+    desc: "I’m Vithu, a wedding cinematographer and photographer with a passion for creating meaningful visual stories. My journey began in 2017 as a videographer and filmmaker, where I worked on music videos and short films, developing a strong foundation in cinematic storytelling.\n\nWith years of experience behind the camera, I focus on documenting genuine emotions, beautiful details, and unforgettable memories that can be relived for generations.",
+    imageUrl: "assets/about/vithu.webp"
   }
 ];
 

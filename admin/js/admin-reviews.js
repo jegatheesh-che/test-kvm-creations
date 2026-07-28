@@ -84,64 +84,44 @@ if (tabGallery && tabReviews) {
 // ================================================
 const DEFAULT_SEED_REVIEWS = [
   {
-    name: "Sophie & Antoine",
-    subtitle: "Brussels, Belgium • Wedding",
+    name: "Priya & Aarav",
+    subtitle: "Toronto, Canada • Wedding & Film",
     stars: 5,
     category: "wedding",
-    text: "We were both quite nervous in front of the camera, but RamG made us feel completely at ease. The final album was breathtaking — every look, smile, and tear of joy was captured so naturally.",
+    text: "Mathu & Vithu were absolute dreams to work with! From the morning prep to the late-night dance floor, KVM Creations captured every emotion and detail of our wedding day so beautifully.",
     badge: "Verified Couple",
-    avatarUrl: "/assets/images/excellents/DSC09416.webp",
+    avatarUrl: "assets/images/img1.webp",
     order: 1
   },
   {
-    name: "Elena & Lucas",
-    subtitle: "Antwerp, Belgium • Cinematic Film",
+    name: "Kavya & Rohan",
+    subtitle: "Vancouver, BC • Destination Wedding",
     stars: 5,
-    category: "film",
-    text: "The wedding highlight film literally brought our entire family to tears! The sound design, colors, and rhythm are equal to a feature film. Truly unmatched artistry!",
+    category: "wedding",
+    text: "The cinematic wedding film literally brought our entire family to tears! The colors, editing, and audio design were breathtaking. KVM Creations is truly unmatched.",
     badge: "Verified Film Client",
-    avatarUrl: "/assets/images/excellents/DSC07335.webp",
+    avatarUrl: "assets/images/img3.webp",
     order: 2
   },
   {
-    name: "Camille V.",
-    subtitle: "Ghent, Belgium • Portrait Session",
+    name: "Ananya & Siddharth",
+    subtitle: "Montreal, QC • Editorial & Portrait",
     stars: 5,
     category: "portrait",
-    text: "RamG has a rare gift for capturing the subtle nuances of emotion. The portraits feel intimate, authentic, and timeless. I could not be happier with the experience.",
+    text: "They have a rare gift for capturing subtle nuances of emotion. Our portraits feel intimate, timeless, and regal. We couldn't be happier with our experience!",
     badge: "Verified Client",
-    avatarUrl: "/assets/images/excellents/DSC08698-2.webp",
+    avatarUrl: "assets/images/img7.webp",
     order: 3
   },
   {
-    name: "Charlotte & David",
-    subtitle: "Bruges, Belgium • Destination Wedding",
+    name: "Deepa & Vignesh",
+    subtitle: "Calgary, AB • Wedding & Film",
     stars: 5,
     category: "wedding",
-    text: "From our first consultation to the delivery of our gallery, everything was seamless. They captured moments we did not even realize were happening!",
+    text: "From our initial inquiry to receiving our final visual gallery, everything was seamless and professional. Mathu & Vithu preserved moments we didn't even realize happened!",
     badge: "Verified Couple",
-    avatarUrl: "/assets/images/excellents/slide3.webp",
+    avatarUrl: "assets/images/img9.webp",
     order: 4
-  },
-  {
-    name: "Mathieu & Clara",
-    subtitle: "Liège, Belgium • Wedding & Film",
-    stars: 5,
-    category: "wedding",
-    text: "An unforgettable experience. The photos look like editorial spreads from a high-fashion magazine, yet they feel completely true to who we are.",
-    badge: "Verified Couple",
-    avatarUrl: "/assets/images/excellents/slide4.webp",
-    order: 5
-  },
-  {
-    name: "Isabelle & Laurent",
-    subtitle: "Namur, Belgium • Anniversary Shoot",
-    stars: 5,
-    category: "portrait",
-    text: "Professional, punctual, and remarkably creative. RamG knows how to use natural light to create magic.",
-    badge: "Verified Client",
-    avatarUrl: "/assets/images/excellents/slide5.webp",
-    order: 6
   }
 ];
 

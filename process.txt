@@ -124,7 +124,18 @@ Actions Taken:
 - Added ?v=2 cache buster query parameter to firebase-config.js imports across all admin JS modules.
 - Changed vercel.json Cache-Control header for /js/(.*) to no-cache, must-revalidate to ensure instant browser updates.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:43:46 IST]
+User Prompt: Import images, reviews, and about section story content from KVM Creations website into Admin Panel seed data
+Actions Taken:
+- Added 27 KVM Creations portfolio images and titles into DEFAULT_SEED_GALLERY in admin/js/admin-gallery.js.
+- Added "+ Import KVM Portfolio Photos (27 Items)" button to populate database with project images.
+- Updated DEFAULT_SEED_REVIEWS in admin/js/admin-reviews.js to KVM Creations client reviews and quotes.
+- Updated DEFAULT_SECTIONS in admin/js/admin-about.js with Mathu & Vithu bios and photos (about.webp, mathu.webp, vithu.webp).
+
 ================================================================================
+
 
 
 

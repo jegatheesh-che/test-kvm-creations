@@ -201,16 +201,17 @@ Actions Taken:
 - Updated gallery.html to include the new script.
 - Added logic for optimized Cloudinary URLs and YouTube thumbnail fetching.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 21:25:21 IST]
+User Prompt: adddd a sellecting and deleting feature 
+Actions Taken:
+- Added bulk selection checkboxes to gallery items in admin/js/admin-gallery.js and styling in admin/css/admin.css.
+- Added "Select All", "Deselect All", and "Delete Selected" buttons to the Gallery Manager header in admin/index.html.
+- Implemented bulk deletion logic in admin/js/admin-gallery.js using Promise.all to handle multiple Cloudinary image deletions (/api/delete-image) and Firestore document deletions efficiently.
+- Added a confirmation modal for bulk deletions.
+
 ================================================================================
-
-
-
-
-
-
-
-
-
 
 
 

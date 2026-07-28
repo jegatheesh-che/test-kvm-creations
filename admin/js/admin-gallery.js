@@ -45,8 +45,20 @@ const deleteModalConfirm = document.getElementById("deleteModalConfirm");
 const deleteItemTitle = document.getElementById("deleteItemTitle");
 const deleteModalError = document.getElementById("deleteModalError");
 
+// DOM Elements - Bulk Actions
+const btnSelectAll = document.getElementById("btnSelectAll");
+const btnDeselectAll = document.getElementById("btnDeselectAll");
+const btnDeleteSelected = document.getElementById("btnDeleteSelected");
+const deleteBulkModal = document.getElementById("deleteBulkModal");
+const deleteBulkModalClose = document.getElementById("deleteBulkModalClose");
+const deleteBulkModalCancel = document.getElementById("deleteBulkModalCancel");
+const deleteBulkModalConfirm = document.getElementById("deleteBulkModalConfirm");
+const deleteBulkCount = document.getElementById("deleteBulkCount");
+const deleteBulkModalError = document.getElementById("deleteBulkModalError");
+
 let currentGalleryItems = [];
 let itemToDelete = null;
+let selectedItemIds = new Set();
 
 // Initialize on auth state change
 onAuthStateChanged(auth, (user) => {
@@ -76,6 +88,9 @@ async function loadGalleryItems() {
     });
 
     currentGalleryItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    selectedItemIds.clear();
+    updateBulkActionUI();
 
 const DEFAULT_SEED_GALLERY = [
   { title: "The First Glance", category: "weddings", mediaType: "image", image: "/assets/images/img1.webp", order: 1 },
@@ -202,6 +217,9 @@ function createAdminGalleryCard(item, index = 0) {
   }
 
   card.innerHTML = `
+    <div class="admin-gallery-item__checkbox-wrapper">
+      <input type="checkbox" class="admin-gallery-item__checkbox" data-id="${item.id}" />
+    </div>
     <img src="${thumbUrl}" alt="${item.title || 'Gallery Item'}" class="admin-gallery-item__thumb" loading="lazy" />
     <div class="admin-gallery-item__info">
       <h3 class="admin-gallery-item__title" title="${item.title || ''}">${item.title || 'Untitled'}</h3>
@@ -228,6 +246,16 @@ function createAdminGalleryCard(item, index = 0) {
 
   const orderInput = card.querySelector('.order-input');
   orderInput.addEventListener('change', (e) => handleOrderChange(item.id, e.target.value));
+
+  const checkbox = card.querySelector('.admin-gallery-item__checkbox');
+  checkbox.addEventListener('change', (e) => {
+    if (e.target.checked) {
+      selectedItemIds.add(item.id);
+    } else {
+      selectedItemIds.delete(item.id);
+    }
+    updateBulkActionUI();
+  });
 
   const img = card.querySelector('.admin-gallery-item__thumb');
   if (img) {
@@ -544,6 +572,114 @@ deleteModalConfirm.addEventListener("click", async () => {
   }
 });
 
+// ================================================
+// BULK DELETE LOGIC
+// ================================================
+function updateBulkActionUI() {
+  const count = selectedItemIds.size;
+  if (count > 0) {
+    if (btnSelectAll) btnSelectAll.style.display = "none";
+    if (btnDeselectAll) btnDeselectAll.style.display = "inline-block";
+    if (btnDeleteSelected) {
+      btnDeleteSelected.style.display = "inline-block";
+      btnDeleteSelected.textContent = `Delete Selected (${count})`;
+      btnDeleteSelected.disabled = false;
+    }
+  } else {
+    if (btnSelectAll) btnSelectAll.style.display = "inline-block";
+    if (btnDeselectAll) btnDeselectAll.style.display = "none";
+    if (btnDeleteSelected) {
+      btnDeleteSelected.style.display = "inline-block";
+      btnDeleteSelected.textContent = `Delete Selected (0)`;
+      btnDeleteSelected.disabled = true;
+    }
+  }
+}
+
+if (btnSelectAll) {
+  btnSelectAll.addEventListener("click", () => {
+    document.querySelectorAll('.admin-gallery-item__checkbox').forEach(cb => {
+      cb.checked = true;
+      selectedItemIds.add(cb.dataset.id);
+    });
+    updateBulkActionUI();
+  });
+}
+
+if (btnDeselectAll) {
+  btnDeselectAll.addEventListener("click", () => {
+    document.querySelectorAll('.admin-gallery-item__checkbox').forEach(cb => {
+      cb.checked = false;
+    });
+    selectedItemIds.clear();
+    updateBulkActionUI();
+  });
+}
+
+if (btnDeleteSelected) {
+  btnDeleteSelected.addEventListener("click", () => {
+    if (selectedItemIds.size === 0) return;
+    deleteBulkCount.textContent = selectedItemIds.size;
+    deleteBulkModalError.style.display = "none";
+    deleteBulkModalConfirm.textContent = "Delete Items";
+    deleteBulkModalConfirm.classList.remove("is-loading");
+    deleteBulkModal.showModal();
+  });
+}
+
+if (deleteBulkModalConfirm) {
+  deleteBulkModalConfirm.addEventListener("click", async () => {
+    if (selectedItemIds.size === 0) return;
+
+    deleteBulkModalError.style.display = "none";
+    deleteBulkModalConfirm.classList.add("is-loading");
+    deleteBulkModalConfirm.textContent = "Deleting...";
+
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("You must be logged in.");
+      const idToken = await user.getIdToken();
+
+      const itemsToDelete = currentGalleryItems.filter(item => selectedItemIds.has(item.id));
+      
+      const promises = itemsToDelete.map(async (item) => {
+        if (item.mediaType === "image" && item.cloudinaryPublicId) {
+          const res = await fetch("/api/delete-image", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              idToken: idToken,
+              publicId: item.cloudinaryPublicId
+            })
+          });
+          const result = await res.json();
+          if (!res.ok) {
+            throw new Error(result.error || `Failed to delete ${item.title} from Cloudinary.`);
+          }
+        }
+        await deleteDoc(doc(db, "gallery", item.id));
+      });
+
+      await Promise.all(promises);
+
+      deleteBulkModal.close();
+      if (window.showToast) {
+        window.showToast(`🗑️ ${itemsToDelete.length} gallery items deleted successfully!`, "delete");
+      }
+      
+      selectedItemIds.clear();
+      updateBulkActionUI();
+      loadGalleryItems();
+    } catch (error) {
+      console.error("[Admin Gallery] Bulk Delete error:", error);
+      deleteBulkModalError.textContent = error.message;
+      deleteBulkModalError.style.display = "block";
+      deleteBulkModalConfirm.classList.remove("is-loading");
+      deleteBulkModalConfirm.textContent = "Delete Items";
+    }
+  });
+}
+
 
 // Event Listeners for Modals
 if (btnAddNew) btnAddNew.addEventListener("click", openAddModal);
@@ -551,9 +687,11 @@ if (galleryModalClose) galleryModalClose.addEventListener("click", closeModals);
 if (galleryModalCancel) galleryModalCancel.addEventListener("click", closeModals);
 if (deleteModalClose) deleteModalClose.addEventListener("click", closeModals);
 if (deleteModalCancel) deleteModalCancel.addEventListener("click", closeModals);
+if (deleteBulkModalClose) deleteBulkModalClose.addEventListener("click", () => deleteBulkModal.close());
+if (deleteBulkModalCancel) deleteBulkModalCancel.addEventListener("click", () => deleteBulkModal.close());
 
 // Close on backdrop click (Escape key is native to <dialog>)
-[galleryModal, deleteModal].forEach(modal => {
+[galleryModal, deleteModal, deleteBulkModal].forEach(modal => {
   if (modal) {
     modal.addEventListener("click", (e) => {
       const rect = modal.getBoundingClientRect();
@@ -561,7 +699,10 @@ if (deleteModalCancel) deleteModalCancel.addEventListener("click", closeModals);
         rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
         rect.left <= e.clientX && e.clientX <= rect.left + rect.width
       );
-      if (!inDialog) closeModals();
+      if (!inDialog) {
+        if (modal === deleteBulkModal) modal.close();
+        else closeModals();
+      }
     });
   }
 });

@@ -77,12 +77,17 @@
 
       <!-- SECTION: GALLERY MANAGER -->
       <section class="admin-gallery-manager" id="sectionGallery">
-        <header class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <header class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
             <h2>Gallery Manager</h2>
             <p>Current visual archive displayed dynamically from Firestore.</p>
           </div>
-          <button id="btnAddNew" class="btn-primary" style="margin-top: 0;">+ Add New Gallery Item</button>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <button type="button" id="btnSelectAll" class="btn-secondary" style="margin-top: 0; font-size: 0.8rem; padding: 8px 12px;">Select All</button>
+            <button type="button" id="btnDeselectAll" class="btn-secondary" style="margin-top: 0; font-size: 0.8rem; padding: 8px 12px; display: none;">Deselect All</button>
+            <button type="button" id="btnDeleteSelected" class="btn-primary btn-danger" style="margin-top: 0; font-size: 0.8rem; padding: 8px 12px; display: none;">Delete Selected (0)</button>
+            <button id="btnAddNew" class="btn-primary" style="margin-top: 0;">+ Add New Gallery Item</button>
+          </div>
         </header>
 
         <div id="adminGalleryLoading" class="admin-gallery-grid">
@@ -298,6 +303,24 @@
       <div class="admin-modal__actions">
         <button type="button" class="btn-secondary" id="deleteModalCancel">Cancel</button>
         <button type="button" class="btn-primary btn-danger" id="deleteModalConfirm">Delete Permanently</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- DELETE BULK GALLERY ITEMS MODAL -->
+  <dialog id="deleteBulkModal" class="admin-modal">
+    <div class="admin-modal__content">
+      <header class="admin-modal__header">
+        <h3>Confirm Bulk Deletion</h3>
+        <button type="button" class="admin-modal__close" id="deleteBulkModalClose">&times;</button>
+      </header>
+      <div class="admin-modal__body">
+        <p>Are you sure you want to delete <span id="deleteBulkCount" style="font-weight: 600; color: var(--clr-gold);"></span> items? This action cannot be undone.</p>
+        <div id="deleteBulkModalError" class="auth-error-msg" style="display: none; margin-top: 16px;"></div>
+      </div>
+      <div class="admin-modal__actions">
+        <button type="button" class="btn-secondary" id="deleteBulkModalCancel">Cancel</button>
+        <button type="button" class="btn-primary btn-danger" id="deleteBulkModalConfirm">Delete Items</button>
       </div>
     </div>
   </dialog>

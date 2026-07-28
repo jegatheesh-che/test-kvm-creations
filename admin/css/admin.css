@@ -510,6 +510,7 @@ body {
   border-radius: 8px;
   overflow: hidden;
   transition: border-color 0.2s ease;
+  position: relative;
 }
 
 .admin-gallery-item__order-editor {
@@ -565,6 +566,26 @@ body {
   aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
+}
+
+.admin-gallery-item__checkbox-wrapper {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-gallery-item__checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--clr-gold);
 }
 
 .admin-gallery-item__info {

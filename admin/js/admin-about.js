@@ -41,22 +41,22 @@ const DEFAULT_SECTIONS = [
     id: "sec_hero",
     eyebrow: "Visual Storytellers & Cinematographers",
     title: "About KVM Creations",
-    desc: "We are Mathu & Vithu, wedding photographers and cinematographers at KVM Creations with a passion for telling love stories through timeless visuals.\n\nTogether, we bring photography and wedding cinematography under one roof—preserving every celebration through both heartfelt images and cinematic films that reflect each couple’s story in an authentic, genuine way.",
-    imageUrl: "assets/about/about.webp"
+    desc: "We are Mathu & Vithu, wedding photographers and cinematographers at KVM Creations with a passion for telling love stories through timeless visuals.\n\nTogether, we bring photography and wedding cinematography under one roof—preserving every celebration through both heartfelt images and cinematic films that reflect each couple’s story in an authentic, genuine way.\n\nWhether we’re behind the camera capturing candid smiles, quiet glances, or crafting cinematic wedding films, we focus on documenting genuine emotions, beautiful details, and unforgettable memories that can be relived for generations.",
+    imageUrl: "/assets/about/about.webp"
   },
   {
     id: "sec_mathu",
     eyebrow: "Wedding Photographer & Cinematographer",
     title: "Hi, I’m Mathu",
-    desc: "I’m Mathu, a wedding photographer and cinematographer with a passion for telling love stories through timeless visuals. I began my photography journey in 2019 and expanded into wedding cinematography in 2022, allowing me to preserve every celebration through both heartfelt images and cinematic films.\n\nI believe every couple has a unique story, and my goal is to capture genuine emotions, meaningful moments, and the little details that make your day unforgettable.",
-    imageUrl: "assets/about/mathu.webp"
+    desc: "I’m Mathu, a wedding photographer and cinematographer with a passion for telling love stories through timeless visuals. I began my photography journey in 2019 and expanded into wedding cinematography in 2022, allowing me to preserve every celebration through both heartfelt images and cinematic films.\n\nI believe every couple has a unique story, and my goal is to capture genuine emotions, meaningful moments, and the little details that make your day unforgettable. Whether I’m behind the camera capturing a candid smile or creating a cinematic wedding film, I focus on delivering memories that you’ll cherish for a lifetime.\n\nFor me, it’s more than just photography and videography—it’s about creating beautiful visual stories that let you relive your most special moments, again and again.",
+    imageUrl: "/assets/about/mathu.webp"
   },
   {
     id: "sec_vithu",
     eyebrow: "Wedding Cinematographer & Photographer",
     title: "Hi, I’m Vithu",
-    desc: "I’m Vithu, a wedding cinematographer and photographer with a passion for creating meaningful visual stories. My journey began in 2017 as a videographer and filmmaker, where I worked on music videos and short films, developing a strong foundation in cinematic storytelling.\n\nWith years of experience behind the camera, I focus on documenting genuine emotions, beautiful details, and unforgettable memories that can be relived for generations.",
-    imageUrl: "assets/about/vithu.webp"
+    desc: "I’m Vithu, a wedding cinematographer and photographer with a passion for creating meaningful visual stories. My journey began in 2017 as a videographer and filmmaker, where I worked on music videos and short films, developing a strong foundation in cinematic storytelling. In 2018, I expanded into photography, combining creativity and technical expertise to capture life’s most memorable moments.\n\nWith years of experience behind the camera, I focus on documenting genuine emotions, beautiful details, and unforgettable memories. Every wedding is unique, and my goal is to create timeless photographs and cinematic films that reflect each couple’s story in an authentic and heartfelt way.\n\nFor me, photography and filmmaking are more than a profession—they’re about preserving moments that can be relived and cherished for generations.",
+    imageUrl: "/assets/about/vithu.webp"
   }
 ];
 

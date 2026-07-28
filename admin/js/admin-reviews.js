@@ -90,7 +90,7 @@ const DEFAULT_SEED_REVIEWS = [
     category: "wedding",
     text: "Mathu & Vithu were absolute dreams to work with! From the morning prep to the late-night dance floor, KVM Creations captured every emotion and detail of our wedding day so beautifully.",
     badge: "Verified Couple",
-    avatarUrl: "assets/images/img1.webp",
+    avatarUrl: "/assets/images/img1.webp",
     order: 1
   },
   {
@@ -100,7 +100,7 @@ const DEFAULT_SEED_REVIEWS = [
     category: "wedding",
     text: "The cinematic wedding film literally brought our entire family to tears! The colors, editing, and audio design were breathtaking. KVM Creations is truly unmatched.",
     badge: "Verified Film Client",
-    avatarUrl: "assets/images/img3.webp",
+    avatarUrl: "/assets/images/img3.webp",
     order: 2
   },
   {
@@ -110,7 +110,7 @@ const DEFAULT_SEED_REVIEWS = [
     category: "portrait",
     text: "They have a rare gift for capturing subtle nuances of emotion. Our portraits feel intimate, timeless, and regal. We couldn't be happier with our experience!",
     badge: "Verified Client",
-    avatarUrl: "assets/images/img7.webp",
+    avatarUrl: "/assets/images/img7.webp",
     order: 3
   },
   {
@@ -120,7 +120,7 @@ const DEFAULT_SEED_REVIEWS = [
     category: "wedding",
     text: "From our initial inquiry to receiving our final visual gallery, everything was seamless and professional. Mathu & Vithu preserved moments we didn't even realize happened!",
     badge: "Verified Couple",
-    avatarUrl: "assets/images/img9.webp",
+    avatarUrl: "/assets/images/img9.webp",
     order: 4
   }
 ];
@@ -217,7 +217,7 @@ function createAdminReviewCard(item, index = 0) {
   card.style.animationDelay = `${index * 0.05}s`;
   card.dataset.id = item.id;
 
-  const defaultAvatar = "assets/images/excellents/DSC09416.webp";
+  const defaultAvatar = "/assets/images/excellents/DSC09416.webp";
   const avatarSrc = item.avatarUrl || defaultAvatar;
   const starsString = renderStars(item.stars || 5);
 

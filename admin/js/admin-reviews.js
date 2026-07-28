@@ -3,7 +3,7 @@
 // Full CRUD Management (Add, Edit, Delete Customer Reviews & Stars)
 // ================================================
 
-import { auth, db } from "/js/firebase-config.js";
+import { auth, db } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 

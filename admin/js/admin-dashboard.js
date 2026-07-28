@@ -1,4 +1,4 @@
-import { auth } from "/js/firebase-config.js";
+import { auth } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const userEmail = document.getElementById("userEmail");

@@ -116,7 +116,16 @@ Actions Taken:
 - Updated process.txt log file.
 - Executed git commit and git push to test-kvm-creations on main branch.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:41:07 IST]
+User Prompt: Bypass browser cache for old firebase-config.js import
+Actions Taken:
+- Added ?v=2 cache buster query parameter to firebase-config.js imports across all admin JS modules.
+- Changed vercel.json Cache-Control header for /js/(.*) to no-cache, must-revalidate to ensure instant browser updates.
+
 ================================================================================
+
 
 
 

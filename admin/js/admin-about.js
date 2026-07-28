@@ -3,7 +3,7 @@
 // Native app aesthetic, smooth glassmorphism, responsive 1-box story builder
 // ================================================
 
-import { auth, db } from "/js/firebase-config.js";
+import { auth, db } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 

@@ -100,7 +100,16 @@ Actions Taken:
 - Updated admin/js/admin-gallery.js to print exact Firestore exception message and error code to UI.
 - Provided troubleshooting steps for Firestore Database creation and rules verification.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:37:54 IST]
+User Prompt: Resolve "Expected first argument to collection() to be a CollectionReference..." type mismatch error
+Actions Taken:
+- Identified root cause: Mismatched Firebase SDK versions imported across files (12.16.0 in firebase-config.js vs 10.12.0 in admin scripts).
+- Unified all Firebase SDK CDN imports across all JS modules to version 10.12.0.
+
 ================================================================================
+
 
 
 

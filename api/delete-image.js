@@ -67,14 +67,14 @@ export default async function handler(req, res) {
       return res.status(403).json({ success: false, error: 'Forbidden: Insufficient administrative permissions.' });
     }
 
-    // 5. Extract Server-Side Cloudinary Credentials
+    // 5. Extract Server-Side Cloudinary Credentials (with direct project fallbacks)
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME || process.env.PUBLIC_CLOUDINARY_CLOUD_NAME || 'vfcl8vef';
-    const apiKeyCloudinary = process.env.CLOUDINARY_API_KEY;
-    const apiSecretCloudinary = process.env.CLOUDINARY_API_SECRET;
+    const apiKeyCloudinary = process.env.CLOUDINARY_API_KEY || 'YOUR_CLOUDINARY_API_KEY_HERE';
+    const apiSecretCloudinary = process.env.CLOUDINARY_API_SECRET || 'YOUR_CLOUDINARY_API_SECRET_HERE';
 
-    if (!apiKeyCloudinary || !apiSecretCloudinary) {
-      console.error('Server Error: Missing Cloudinary API Key or Secret environment variables.');
-      return res.status(500).json({ success: false, error: 'Server configuration error.' });
+    if (!apiKeyCloudinary || apiKeyCloudinary === 'YOUR_CLOUDINARY_API_KEY_HERE' || !apiSecretCloudinary || apiSecretCloudinary === 'YOUR_CLOUDINARY_API_SECRET_HERE') {
+      console.error('Server Error: Missing Cloudinary API Key or Secret configuration in project.');
+      return res.status(500).json({ success: false, error: 'Server configuration error: Please enter Cloudinary API Key and Secret in api/delete-image.js or apis.txt.' });
     }
 
     // 6. Configure Cloudinary Engine Server-Side

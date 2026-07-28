@@ -50,6 +50,15 @@ Actions Taken:
 - Configured config/cloudinary-config.js with Cloud Name vfcl8vef and Upload Preset kvm_creations_gallery.
 - Set up api/delete-image.js serverless endpoint and vercel.json.
 
+--------------------------------------------------------------------------------
+
+[2026-07-28 18:23:34 IST]
+User Prompt: Configure Cloudinary API keys directly inside project without Vercel dashboard environment variables
+Actions Taken:
+- Updated api/delete-image.js to support direct in-project fallbacks for CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET.
+- Updated project configuration so all API credentials can be stored directly within project codebase files.
+
 ================================================================================
+
 
 

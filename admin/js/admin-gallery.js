@@ -565,7 +565,7 @@ galleryForm.addEventListener("submit", async (e) => {
         // Save Firestore Document
         uploadProgressStepText.textContent = `Saving "${file.name}" to database...`;
 
-        const itemTitle = baseTitle ? (totalFiles > 1 ? `${baseTitle} #${i + 1}` : baseTitle) : filenameToTitle(file.name);
+        const itemTitle = baseTitle ? (totalFiles > 1 ? `${baseTitle} #${i + 1}` : baseTitle) : "";
         const itemOrder = currentMaxOrder + i + 1;
         const mod = itemOrder % 4;
         const tiltClass = mod === 1 ? "tilt-left" : mod === 3 ? "tilt-right" : "";

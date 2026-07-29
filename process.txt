@@ -257,5 +257,16 @@ Actions Taken:
 - Added per-image status pills (Ready -> Uploading... -> ✓ Done) to provide instant visual feedback during batch uploads.
 - Styled glassmorphic upload progress cards and keyframe animations in admin/css/admin.css.
 
+
+--------------------------------------------------------------------------------
+
+[2026-07-29 21:19:00 IST]
+User Prompt: no title need
+Actions Taken:
+- Removed `required` constraint from Title input field in admin/index.html (`Title (Optional)`).
+- Updated admin/js/admin-gallery.js to allow uploading images without requiring a title.
+- Updated js/main.js Lightbox rendering to cleanly omit the title heading if a photo has no title.
+
 ================================================================================
+
 

@@ -559,10 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const img = card.querySelector('img');
       const rawCat = card.getAttribute('data-category') || 'Portfolio';
       const cat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
-      const title = card.getAttribute('data-title') || (img ? img.alt : 'KVM Showcase');
-      const youtubeId = card.getAttribute('data-youtube-id');
-      const isVideo = card.getAttribute('data-media-type') === 'video' || !!youtubeId;
-      const fullResUrl = card.getAttribute('data-full') || (img ? img.src : '');
+      const title = (card.getAttribute('data-title') || '').trim();
       
       if (isVideo && youtubeId) {
         if (lightboxImg) lightboxImg.style.display = 'none';
@@ -578,11 +575,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lightboxImg) {
           lightboxImg.style.display = 'block';
           lightboxImg.src = fullResUrl;
-          lightboxImg.alt = title;
+          lightboxImg.alt = title || cat;
         }
       }
 
-      if (lightboxTitle) lightboxTitle.textContent = title;
+      if (lightboxTitle) {
+        if (title) {
+          lightboxTitle.textContent = title;
+          lightboxTitle.style.display = 'block';
+        } else {
+          lightboxTitle.textContent = '';
+          lightboxTitle.style.display = 'none';
+        }
+      }
       if (lightboxSub) lightboxSub.textContent = cat;
     }
 

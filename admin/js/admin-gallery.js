@@ -273,6 +273,24 @@ function createAdminGalleryCard(item, index = 0) {
 // ================================================
 // MODAL LOGIC (ADD / EDIT)
 // ================================================
+// Dynamic file input selection change listener
+if (inputImage) {
+  inputImage.addEventListener("change", () => {
+    const hintEl = document.getElementById("galleryImageHint");
+    const count = inputImage.files ? inputImage.files.length : 0;
+    if (count > 1) {
+      if (hintEl) hintEl.textContent = `📸 Selected ${count} images for batch upload!`;
+      if (galleryModalSubmit && !inputId.value) galleryModalSubmit.textContent = `Save ${count} Items`;
+    } else if (count === 1) {
+      if (hintEl) hintEl.textContent = `Selected photo: ${inputImage.files[0].name}`;
+      if (galleryModalSubmit && !inputId.value) galleryModalSubmit.textContent = "Save Item";
+    } else {
+      if (hintEl) hintEl.textContent = "Select one or multiple images (WebP, JPEG, PNG) to upload at once.";
+      if (galleryModalSubmit && !inputId.value) galleryModalSubmit.textContent = "Save Item";
+    }
+  });
+}
+
 function resetForm() {
   galleryForm.reset();
   inputId.value = "";
@@ -281,6 +299,7 @@ function resetForm() {
   galleryFormError.textContent = "";
   toggleMediaFields();
   inputImage.required = true;
+  document.getElementById("galleryImageHint").textContent = "Select one or multiple images (WebP, JPEG, PNG) to upload at once.";
   galleryModalSubmit.textContent = "Save Item";
   galleryModalSubmit.classList.remove('is-loading');
 }
@@ -303,7 +322,6 @@ function openEditModal(item) {
   if (item.mediaType === "video") {
     inputYoutubeId.value = item.youtubeId;
   } else {
-    // Cannot edit image file natively without full replace logic. Keep simple.
     inputImage.required = false; 
     document.getElementById("galleryImageHint").textContent = "Editing image file is not supported. Please delete and recreate if you need to change the photo.";
     inputImage.disabled = true;
@@ -334,8 +352,16 @@ function toggleMediaFields() {
   }
 }
 
+// Utility to convert filename to readable title
+function filenameToTitle(filename) {
+  if (!filename) return "Gallery Item";
+  const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+  const cleanName = nameWithoutExt.replace(/[-_]+/g, " ").trim();
+  return cleanName.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+
 // ================================================
-// FORM SUBMISSION (CREATE & UPDATE)
+// FORM SUBMISSION (CREATE SINGLE/MULTIPLE & UPDATE)
 // ================================================
 galleryForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -344,11 +370,11 @@ galleryForm.addEventListener("submit", async (e) => {
   galleryModalSubmit.textContent = "Saving...";
 
   const isEdit = !!inputId.value;
-  const title = inputTitle.value.trim();
+  const baseTitle = inputTitle.value.trim();
   const category = inputCategory.value;
   const mediaType = inputMediaType.value;
   
-  if (!title || !category || !mediaType) {
+  if (!category || !mediaType || (!isEdit && mediaType === "video" && !inputYoutubeId.value.trim())) {
     showFormError("Please fill in all required fields.");
     return;
   }
@@ -356,7 +382,7 @@ galleryForm.addEventListener("submit", async (e) => {
   try {
     if (isEdit) {
       // --- UPDATE EXISTING ITEM ---
-      const updateData = { title, category };
+      const updateData = { title: baseTitle, category };
       if (mediaType === "video") {
         const rawYt = inputYoutubeId.value.trim();
         const yId = extractYoutubeId(rawYt);
@@ -366,17 +392,78 @@ galleryForm.addEventListener("submit", async (e) => {
 
       await updateDoc(doc(db, "gallery", inputId.value), updateData);
       
+      closeModals();
+      if (window.showToast) {
+        window.showToast(`✏️ Gallery item "${baseTitle}" updated!`, "info");
+      }
+      loadGalleryItems();
+
+    } else if (mediaType === "image" && inputImage.files && inputImage.files.length > 1) {
+      // --- BATCH CREATE MULTIPLE IMAGES ---
+      const files = Array.from(inputImage.files);
+      let currentMaxOrder = currentGalleryItems.reduce((max, item) => Math.max(max, item.order || 0), 0);
+      let uploadedCount = 0;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        galleryModalSubmit.textContent = `Uploading photo ${i + 1} of ${files.length}...`;
+
+        // Upload to Cloudinary
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+        formData.append("folder", "website-gallery");
+
+        const uploadRes = await fetch(CLOUDINARY_UPLOAD_URL, { method: "POST", body: formData });
+        const uploadData = await uploadRes.json();
+        
+        if (!uploadRes.ok) {
+          console.error(`Failed to upload ${file.name}:`, uploadData.error);
+          continue;
+        }
+
+        const itemTitle = baseTitle ? (files.length > 1 ? `${baseTitle} #${i + 1}` : baseTitle) : filenameToTitle(file.name);
+        const itemOrder = currentMaxOrder + i + 1;
+        const mod = itemOrder % 4;
+        const tiltClass = mod === 1 ? "tilt-left" : mod === 3 ? "tilt-right" : "";
+
+        const docData = {
+          title: itemTitle,
+          category,
+          mediaType: "image",
+          cloudinaryUrl: uploadData.secure_url,
+          cloudinaryPublicId: uploadData.public_id,
+          tiltClass,
+          order: itemOrder,
+          createdAt: serverTimestamp()
+        };
+
+        const newDocRef = doc(collection(db, "gallery"));
+        await setDoc(newDocRef, docData);
+        uploadedCount++;
+      }
+
+      closeModals();
+      if (window.showToast) {
+        window.showToast(`✨ Successfully uploaded and published ${uploadedCount} gallery photos!`, "success");
+      }
+      if (window.showAppPopup) {
+        window.showAppPopup("Batch Upload Complete", `Uploaded ${uploadedCount} images to portfolio archive under ${category.toUpperCase()}.`, "success");
+      }
+      loadGalleryItems();
+
     } else {
-      // --- CREATE NEW ITEM ---
+      // --- CREATE SINGLE ITEM (SINGLE IMAGE OR VIDEO) ---
       let cloudinaryUrl = null;
       let cloudinaryPublicId = null;
       let youtubeId = null;
+      let title = baseTitle;
 
       if (mediaType === "image") {
         const file = inputImage.files[0];
-        if (!file) throw new Error("Please select an image to upload.");
+        if (!file) throw new Error("Please select an image file to upload.");
+        if (!title) title = filenameToTitle(file.name);
 
-        // Cloudinary Upload
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", UPLOAD_PRESET);
@@ -393,15 +480,14 @@ galleryForm.addEventListener("submit", async (e) => {
         const rawYt = inputYoutubeId.value.trim();
         youtubeId = extractYoutubeId(rawYt);
         if (!youtubeId) throw new Error("YouTube link or ID is required.");
+        if (!title) title = "Cinematic Video Showcase";
       }
 
-      // Calculate Order & Tilt
       const maxOrder = currentGalleryItems.reduce((max, item) => Math.max(max, item.order || 0), 0);
       const newOrder = maxOrder + 1;
       const mod = newOrder % 4;
       const tiltClass = mod === 1 ? "tilt-left" : mod === 3 ? "tilt-right" : "";
 
-      // Firestore Document
       const docData = {
         title,
         category,
@@ -418,18 +504,15 @@ galleryForm.addEventListener("submit", async (e) => {
         docData.youtubeId = youtubeId;
       }
 
-      // Use a custom ID or let Firestore generate it. We'll use a custom ID for cleaner URLs/refs if needed, or just let auto ID.
-      // We'll let setDoc auto ID by generating a new ref.
       const newDocRef = doc(collection(db, "gallery"));
       await setDoc(newDocRef, docData);
-    }
 
-    // Success Toast & Refresh
-    closeModals();
-    if (window.showToast) {
-      window.showToast(isEdit ? `✏️ Gallery item "${title}" updated!` : `✨ Gallery item "${title}" added successfully!`, isEdit ? "info" : "success");
+      closeModals();
+      if (window.showToast) {
+        window.showToast(`✨ Gallery item "${title}" added successfully!`, "success");
+      }
+      loadGalleryItems();
     }
-    loadGalleryItems();
 
   } catch (error) {
     console.error("[Admin Gallery] Save error:", error);

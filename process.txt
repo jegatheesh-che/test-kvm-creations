@@ -235,4 +235,16 @@ Actions Taken:
 - Applied iOS 16px font-size input rules to prevent auto-zooming on touch devices, and scaled all tap targets to 44px+ for optimum touch ergonomics.
 - Fully tested on mobile viewports (390x844) with automated browser subagent.
 
+
+--------------------------------------------------------------------------------
+
+[2026-07-29 21:11:00 IST]
+User Prompt: bro i want to multiselect the img option
+Actions Taken:
+- Updated admin/index.html gallery modal file input to include the `multiple` attribute (`accept="image/*" multiple`).
+- Enhanced admin/js/admin-gallery.js to support batch multi-image selection and automated sequence uploading to Cloudinary & Firestore.
+- Added dynamic selection count indicators and button feedback ("📸 Selected 5 images", "Uploading photo 1 of 5...").
+- Auto-formatted file basenames into title-cased item names when title input is left empty during batch uploads.
+- Verified single and multi-image upload workflows.
+
 ================================================================================

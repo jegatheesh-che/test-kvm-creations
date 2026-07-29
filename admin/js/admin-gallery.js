@@ -273,11 +273,111 @@ function createAdminGalleryCard(item, index = 0) {
 // ================================================
 // MODAL LOGIC (ADD / EDIT)
 // ================================================
+// DOM Elements - Upload UI & Progress
+const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+const uploadProgressWrapper = document.getElementById("uploadProgressWrapper");
+const uploadProgressTitle = document.getElementById("uploadProgressTitle");
+const uploadProgressCount = document.getElementById("uploadProgressCount");
+const uploadProgressPercent = document.getElementById("uploadProgressPercent");
+const uploadProgressBarFill = document.getElementById("uploadProgressBarFill");
+const uploadProgressStepText = document.getElementById("uploadProgressStepText");
+
+// Helper: Format bytes to human readable size
+function formatFileSize(bytes) {
+  if (!bytes) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+// XHR Cloudinary Upload Helper with Real-time Byte Progress Tracking
+function uploadToCloudinaryWithProgress(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+    formData.append("folder", "website-gallery");
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percent = (e.loaded / e.total) * 100;
+        if (onProgress) onProgress(percent);
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          resolve(data);
+        } catch (err) {
+          reject(new Error("Invalid JSON response from Cloudinary."));
+        }
+      } else {
+        try {
+          const errData = JSON.parse(xhr.responseText);
+          reject(new Error(errData.error?.message || "Cloudinary upload failed."));
+        } catch (err) {
+          reject(new Error(`Cloudinary upload failed (HTTP ${xhr.status})`));
+        }
+      }
+    };
+
+    xhr.onerror = () => reject(new Error("Network connection error during Cloudinary upload."));
+    xhr.open("POST", CLOUDINARY_UPLOAD_URL, true);
+    xhr.send(formData);
+  });
+}
+
+// Render Live Image Previews in Modal
+function renderImagePreviews() {
+  if (!imagePreviewContainer || !inputImage) return;
+  imagePreviewContainer.innerHTML = "";
+
+  const files = inputImage.files ? Array.from(inputImage.files) : [];
+  if (files.length === 0) {
+    imagePreviewContainer.style.display = "none";
+    return;
+  }
+
+  imagePreviewContainer.style.display = "grid";
+
+  files.forEach((file, index) => {
+    const card = document.createElement("div");
+    card.className = "preview-thumb-card";
+    card.dataset.index = index;
+
+    card.innerHTML = `
+      <span class="preview-status-pill" id="prevPill_${index}">Ready</span>
+      <img id="prevImg_${index}" src="" alt="${file.name}" />
+      <div class="preview-meta-overlay">
+        <span class="preview-filename" title="${file.name}">${file.name}</span>
+        <span class="preview-size">${formatFileSize(file.size)}</span>
+      </div>
+    `;
+
+    imagePreviewContainer.appendChild(card);
+
+    // Read local image file for preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imgEl = document.getElementById(`prevImg_${index}`);
+      if (imgEl) imgEl.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // Dynamic file input selection change listener
 if (inputImage) {
   inputImage.addEventListener("change", () => {
     const hintEl = document.getElementById("galleryImageHint");
     const count = inputImage.files ? inputImage.files.length : 0;
+    
+    renderImagePreviews();
+
     if (count > 1) {
       if (hintEl) hintEl.textContent = `📸 Selected ${count} images for batch upload!`;
       if (galleryModalSubmit && !inputId.value) galleryModalSubmit.textContent = `Save ${count} Items`;
@@ -297,11 +397,23 @@ function resetForm() {
   galleryModalTitle.textContent = "Add New Item";
   galleryFormError.style.display = "none";
   galleryFormError.textContent = "";
+  if (imagePreviewContainer) {
+    imagePreviewContainer.innerHTML = "";
+    imagePreviewContainer.style.display = "none";
+  }
+  if (uploadProgressWrapper) {
+    uploadProgressWrapper.style.display = "none";
+    uploadProgressBarFill.style.width = "0%";
+    uploadProgressPercent.textContent = "0%";
+  }
   toggleMediaFields();
   inputImage.required = true;
   document.getElementById("galleryImageHint").textContent = "Select one or multiple images (WebP, JPEG, PNG) to upload at once.";
   galleryModalSubmit.textContent = "Save Item";
   galleryModalSubmit.classList.remove('is-loading');
+  galleryModalSubmit.disabled = false;
+  if (galleryModalClose) galleryModalClose.style.display = "block";
+  if (galleryModalCancel) galleryModalCancel.style.display = "inline-block";
 }
 
 function openAddModal() {
@@ -361,14 +473,12 @@ function filenameToTitle(filename) {
 }
 
 // ================================================
-// FORM SUBMISSION (CREATE SINGLE/MULTIPLE & UPDATE)
+// FORM SUBMISSION (WITH VISUAL UPLOAD LOADING PROCESS UI)
 // ================================================
 galleryForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   galleryFormError.style.display = "none";
-  galleryModalSubmit.classList.add('is-loading');
-  galleryModalSubmit.textContent = "Saving...";
-
+  
   const isEdit = !!inputId.value;
   const baseTitle = inputTitle.value.trim();
   const category = inputCategory.value;
@@ -382,6 +492,9 @@ galleryForm.addEventListener("submit", async (e) => {
   try {
     if (isEdit) {
       // --- UPDATE EXISTING ITEM ---
+      galleryModalSubmit.classList.add('is-loading');
+      galleryModalSubmit.textContent = "Saving...";
+
       const updateData = { title: baseTitle, category };
       if (mediaType === "video") {
         const rawYt = inputYoutubeId.value.trim();
@@ -398,31 +511,61 @@ galleryForm.addEventListener("submit", async (e) => {
       }
       loadGalleryItems();
 
-    } else if (mediaType === "image" && inputImage.files && inputImage.files.length > 1) {
-      // --- BATCH CREATE MULTIPLE IMAGES ---
+    } else if (mediaType === "image" && inputImage.files && inputImage.files.length > 0) {
+      // --- VISUAL UPLOAD PROCESS FOR SINGLE / MULTIPLE IMAGES ---
       const files = Array.from(inputImage.files);
+      const totalFiles = files.length;
+      
+      // Activate Upload Loading UI Wrapper
+      uploadProgressWrapper.style.display = "block";
+      uploadProgressTitle.textContent = totalFiles > 1 ? "Batch Uploading Images" : "Uploading Image";
+      uploadProgressCount.textContent = `0 / ${totalFiles}`;
+      uploadProgressPercent.textContent = "0%";
+      uploadProgressBarFill.style.width = "0%";
+      uploadProgressStepText.textContent = "Connecting to Cloudinary server...";
+
+      // Disable modal controls while uploading
+      galleryModalSubmit.disabled = true;
+      galleryModalSubmit.classList.add('is-loading');
+      galleryModalSubmit.textContent = "Uploading...";
+      if (galleryModalClose) galleryModalClose.style.display = "none";
+      if (galleryModalCancel) galleryModalCancel.style.display = "none";
+
       let currentMaxOrder = currentGalleryItems.reduce((max, item) => Math.max(max, item.order || 0), 0);
       let uploadedCount = 0;
 
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 0; i < totalFiles; i++) {
         const file = files[i];
-        galleryModalSubmit.textContent = `Uploading photo ${i + 1} of ${files.length}...`;
+        const cardEl = document.querySelector(`.preview-thumb-card[data-index="${i}"]`);
+        const pillEl = document.getElementById(`prevPill_${i}`);
 
-        // Upload to Cloudinary
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", UPLOAD_PRESET);
-        formData.append("folder", "website-gallery");
-
-        const uploadRes = await fetch(CLOUDINARY_UPLOAD_URL, { method: "POST", body: formData });
-        const uploadData = await uploadRes.json();
-        
-        if (!uploadRes.ok) {
-          console.error(`Failed to upload ${file.name}:`, uploadData.error);
-          continue;
+        if (cardEl) {
+          cardEl.classList.remove('ready', 'done', 'error');
+          cardEl.classList.add('uploading');
         }
+        if (pillEl) pillEl.textContent = "Uploading...";
 
-        const itemTitle = baseTitle ? (files.length > 1 ? `${baseTitle} #${i + 1}` : baseTitle) : filenameToTitle(file.name);
+        uploadProgressCount.textContent = `${i + 1} / ${totalFiles}`;
+        uploadProgressStepText.textContent = `Uploading "${file.name}"...`;
+
+        // Upload with byte-level progress
+        const uploadData = await uploadToCloudinaryWithProgress(file, (filePercent) => {
+          const overallPercent = Math.round(((i + (filePercent / 100)) / totalFiles) * 100);
+          uploadProgressPercent.textContent = `${overallPercent}%`;
+          uploadProgressBarFill.style.width = `${overallPercent}%`;
+        });
+
+        // Update Card UI to Done
+        if (cardEl) {
+          cardEl.classList.remove('uploading');
+          cardEl.classList.add('done');
+        }
+        if (pillEl) pillEl.textContent = "✓ Done";
+
+        // Save Firestore Document
+        uploadProgressStepText.textContent = `Saving "${file.name}" to database...`;
+
+        const itemTitle = baseTitle ? (totalFiles > 1 ? `${baseTitle} #${i + 1}` : baseTitle) : filenameToTitle(file.name);
         const itemOrder = currentMaxOrder + i + 1;
         const mod = itemOrder % 4;
         const tiltClass = mod === 1 ? "tilt-left" : mod === 3 ? "tilt-right" : "";
@@ -443,45 +586,36 @@ galleryForm.addEventListener("submit", async (e) => {
         uploadedCount++;
       }
 
-      closeModals();
-      if (window.showToast) {
-        window.showToast(`✨ Successfully uploaded and published ${uploadedCount} gallery photos!`, "success");
-      }
-      if (window.showAppPopup) {
-        window.showAppPopup("Batch Upload Complete", `Uploaded ${uploadedCount} images to portfolio archive under ${category.toUpperCase()}.`, "success");
-      }
-      loadGalleryItems();
+      // Finish Progress Loading UI
+      uploadProgressPercent.textContent = "100%";
+      uploadProgressBarFill.style.width = "100%";
+      uploadProgressStepText.textContent = "✨ Upload complete! Publishing portfolio archive...";
+
+      setTimeout(() => {
+        closeModals();
+        if (window.showToast) {
+          window.showToast(
+            totalFiles > 1 
+              ? `✨ Successfully uploaded and published ${uploadedCount} photos!` 
+              : `✨ Photo uploaded and published to gallery!`, 
+            "success"
+          );
+        }
+        if (window.showAppPopup && totalFiles > 1) {
+          window.showAppPopup("Batch Upload Complete", `Uploaded ${uploadedCount} images to portfolio archive under ${category.toUpperCase()}.`, "success");
+        }
+        loadGalleryItems();
+      }, 700);
 
     } else {
-      // --- CREATE SINGLE ITEM (SINGLE IMAGE OR VIDEO) ---
-      let cloudinaryUrl = null;
-      let cloudinaryPublicId = null;
-      let youtubeId = null;
-      let title = baseTitle;
+      // --- CREATE SINGLE VIDEO ITEM ---
+      galleryModalSubmit.classList.add('is-loading');
+      galleryModalSubmit.textContent = "Saving Video...";
 
-      if (mediaType === "image") {
-        const file = inputImage.files[0];
-        if (!file) throw new Error("Please select an image file to upload.");
-        if (!title) title = filenameToTitle(file.name);
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", UPLOAD_PRESET);
-        formData.append("folder", "website-gallery");
-
-        const uploadRes = await fetch(CLOUDINARY_UPLOAD_URL, { method: "POST", body: formData });
-        const uploadData = await uploadRes.json();
-        
-        if (!uploadRes.ok) throw new Error(uploadData.error?.message || "Failed to upload image to Cloudinary.");
-        
-        cloudinaryUrl = uploadData.secure_url;
-        cloudinaryPublicId = uploadData.public_id;
-      } else {
-        const rawYt = inputYoutubeId.value.trim();
-        youtubeId = extractYoutubeId(rawYt);
-        if (!youtubeId) throw new Error("YouTube link or ID is required.");
-        if (!title) title = "Cinematic Video Showcase";
-      }
+      const rawYt = inputYoutubeId.value.trim();
+      const youtubeId = extractYoutubeId(rawYt);
+      if (!youtubeId) throw new Error("YouTube link or ID is required.");
+      const title = baseTitle || "Cinematic Video Showcase";
 
       const maxOrder = currentGalleryItems.reduce((max, item) => Math.max(max, item.order || 0), 0);
       const newOrder = maxOrder + 1;
@@ -491,25 +625,19 @@ galleryForm.addEventListener("submit", async (e) => {
       const docData = {
         title,
         category,
-        mediaType,
+        mediaType: "video",
+        youtubeId,
         tiltClass,
         order: newOrder,
         createdAt: serverTimestamp()
       };
-
-      if (mediaType === "image") {
-        docData.cloudinaryUrl = cloudinaryUrl;
-        docData.cloudinaryPublicId = cloudinaryPublicId;
-      } else {
-        docData.youtubeId = youtubeId;
-      }
 
       const newDocRef = doc(collection(db, "gallery"));
       await setDoc(newDocRef, docData);
 
       closeModals();
       if (window.showToast) {
-        window.showToast(`✨ Gallery item "${title}" added successfully!`, "success");
+        window.showToast(`✨ Video item "${title}" added successfully!`, "success");
       }
       loadGalleryItems();
     }
@@ -517,9 +645,13 @@ galleryForm.addEventListener("submit", async (e) => {
   } catch (error) {
     console.error("[Admin Gallery] Save error:", error);
     showFormError(error.message);
+    if (uploadProgressWrapper) uploadProgressWrapper.style.display = "none";
   } finally {
     galleryModalSubmit.classList.remove('is-loading');
+    galleryModalSubmit.disabled = false;
     galleryModalSubmit.textContent = isEdit ? "Save Changes" : "Save Item";
+    if (galleryModalClose) galleryModalClose.style.display = "block";
+    if (galleryModalCancel) galleryModalCancel.style.display = "inline-block";
   }
 });
 

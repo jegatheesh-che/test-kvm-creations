@@ -213,6 +213,29 @@
           <label for="galleryImage">Image File(s) <span id="galleryImageAsterisk">*</span></label>
           <input type="file" id="galleryImage" accept="image/*" multiple />
           <p class="admin-modal__hint" id="galleryImageHint">Select one or multiple images (WebP, JPEG, PNG) to upload at once.</p>
+          
+          <!-- LIVE IMAGE THUMBNAIL PREVIEW GRID -->
+          <div id="imagePreviewContainer" class="upload-preview-grid" style="display: none;"></div>
+
+          <!-- VISUAL UPLOADING PROCESS LOADING UI -->
+          <div id="uploadProgressWrapper" class="upload-progress-wrapper" style="display: none;">
+            <div class="upload-progress-header">
+              <div class="upload-progress-status-info">
+                <span id="uploadProgressTitle" class="upload-progress-title">Uploading Images...</span>
+                <span id="uploadProgressCount" class="upload-progress-count">0 / 0</span>
+              </div>
+              <span id="uploadProgressPercent" class="upload-progress-percent">0%</span>
+            </div>
+
+            <div class="upload-progress-bar-track">
+              <div id="uploadProgressBarFill" class="upload-progress-bar-fill" style="width: 0%;"></div>
+            </div>
+
+            <div class="upload-progress-step-detail">
+              <span class="upload-spinner-ring"></span>
+              <span id="uploadProgressStepText" class="upload-progress-step-text">Initializing Cloudinary upload...</span>
+            </div>
+          </div>
         </div>
 
         <div class="form-group" id="groupYoutubeId" style="display: none;">

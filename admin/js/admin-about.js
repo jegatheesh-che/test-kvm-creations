@@ -1,5 +1,5 @@
 // ================================================
-// RAMG PRODUCTION — ULTRA CLEAN APP-LIKE ABOUT STORY BUILDER
+// KVM CREATIONS STUDIO — ABOUT STORY BUILDER
 // Native app aesthetic, smooth glassmorphism, responsive 1-box story builder
 // ================================================
 
@@ -152,63 +152,77 @@ function renderAboutSections() {
 
   sectionsList.forEach((sec, idx) => {
     const card = document.createElement("div");
-    card.className = "about-section-card";
+    card.className = `about-section-card ${idx === 0 ? 'is-expanded' : 'is-collapsed'}`;
     card.dataset.index = idx;
 
     const isFirst = idx === 0;
     const isLast = idx === sectionsList.length - 1;
+    const previewImg = sec.imageUrl || '/assets/about/about.webp';
 
     card.innerHTML = `
-      <div class="about-section-card__header">
+      <div class="about-section-card__header" title="Click to toggle section details">
         <div class="about-section-card__title-group">
           <span class="about-section-card__badge">Section 0${idx + 1}</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--clr-white); font-weight: 400;">
-            ${escapeHtml(sec.eyebrow || 'Story Section')} ${sec.title ? '&mdash; ' + escapeHtml(sec.title) : ''}
-          </h3>
+          <img class="about-section-card__header-thumb" src="${previewImg}" alt="Thumb" />
+          <div class="about-section-card__header-titles">
+            <h3 class="about-section-header-title">
+              ${escapeHtml(sec.title || sec.eyebrow || 'Untitled Story Section')}
+            </h3>
+            <p class="about-section-header-sub">
+              ${escapeHtml(sec.eyebrow || 'Story Section')}
+            </p>
+          </div>
         </div>
 
-        <div class="about-section-card__actions">
+        <div class="about-section-card__actions" onclick="event.stopPropagation();">
           <button type="button" class="btn-icon-action btn-move-up" data-index="${idx}" ${isFirst ? 'disabled' : ''} title="Move Up">&uarr;</button>
           <button type="button" class="btn-icon-action btn-move-down" data-index="${idx}" ${isLast ? 'disabled' : ''} title="Move Down">&darr;</button>
           <button type="button" class="btn-icon-action btn-icon-delete btn-delete-sec" data-index="${idx}" title="Delete Section">&times;</button>
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-        <div class="form-group">
-          <label style="font-size: 0.85rem; font-weight: 600; color: var(--clr-gold);">Eyebrow Tagline *</label>
-          <input type="text" class="sec-input-eyebrow" value="${escapeHtml(sec.eyebrow || '')}" placeholder="e.g., About Me, My Philosophy" required />
-        </div>
-
-        <div class="form-group">
-          <label style="font-size: 0.85rem; font-weight: 600; color: var(--clr-gold);">Section Heading *</label>
-          <input type="text" class="sec-input-title" value="${escapeHtml(sec.title || '')}" placeholder="e.g., Every story deserves to be remembered." required />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label style="font-size: 0.85rem; font-weight: 600; color: var(--clr-gold);">Section Story Text (Write your narrative here) *</label>
-        <textarea class="admin-textarea sec-input-desc" rows="5" placeholder="Write your story section narrative..." required>${escapeHtml(sec.desc || '')}</textarea>
-      </div>
-
-      <div class="custom-upload-zone">
-        <div style="flex: 1;">
-          <label style="font-size: 0.85rem; font-weight: 600; color: var(--clr-gold); margin-bottom: 8px; display: block;">Section Photo</label>
-          <label class="custom-upload-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
+          <button type="button" class="btn-icon-action btn-toggle-expand" data-index="${idx}" title="Toggle Details">
+            <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
-            <span>Upload Photo File</span>
-            <input type="file" class="sec-input-file" accept="image/*" style="display: none;" />
-          </label>
-          <span class="file-name-indicator" style="font-size: 0.8rem; color: var(--clr-muted); margin-left: 12px;">No new file chosen</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="about-section-card__body">
+        <div class="about-form-grid">
+          <div class="form-group">
+            <label class="form-label-gold">Eyebrow Tagline *</label>
+            <input type="text" class="sec-input-eyebrow" value="${escapeHtml(sec.eyebrow || '')}" placeholder="e.g., Visual Storytellers, About Me" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label-gold">Section Heading *</label>
+            <input type="text" class="sec-input-title" value="${escapeHtml(sec.title || '')}" placeholder="e.g., About KVM Creations, Hi I'm Mathu" required />
+          </div>
         </div>
 
-        <div style="text-align: center;">
-          <p style="font-size: 0.75rem; color: var(--clr-muted); margin-bottom: 4px;">Photo Preview</p>
-          <img class="sec-img-preview" src="${sec.imageUrl || '/assets/images/ramg-prods.png'}" alt="Preview" />
+        <div class="form-group">
+          <label class="form-label-gold">Section Story Narrative (Double space paragraph breaks) *</label>
+          <textarea class="admin-textarea sec-input-desc" rows="4" placeholder="Write your section narrative..." required>${escapeHtml(sec.desc || '')}</textarea>
+        </div>
+
+        <div class="custom-upload-zone">
+          <div class="custom-upload-zone__info">
+            <label class="form-label-gold" style="margin-bottom: 6px; display: block;">Section Photo Asset</label>
+            <label class="custom-upload-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Choose Photo</span>
+              <input type="file" class="sec-input-file" accept="image/*" style="display: none;" />
+            </label>
+            <span class="file-name-indicator">No file chosen</span>
+          </div>
+
+          <div class="custom-upload-zone__preview-wrap">
+            <span class="preview-label">Preview</span>
+            <img class="sec-img-preview" src="${previewImg}" alt="Preview" />
+          </div>
         </div>
       </div>
     `;
@@ -232,9 +246,21 @@ function escapeHtml(str) {
 
 // Event Listeners for Dynamic Cards
 function attachCardEvents() {
+  // Accordion Expand / Collapse Header Click
+  document.querySelectorAll(".about-section-card__header").forEach(header => {
+    header.addEventListener("click", () => {
+      const card = header.closest(".about-section-card");
+      if (card) {
+        card.classList.toggle("is-collapsed");
+        card.classList.toggle("is-expanded");
+      }
+    });
+  });
+
   // Move Up
   document.querySelectorAll(".btn-move-up").forEach(btn => {
     btn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const idx = parseInt(e.currentTarget.dataset.index);
       if (idx > 0) {
         saveCurrentInputValues();
@@ -249,6 +275,7 @@ function attachCardEvents() {
   // Move Down
   document.querySelectorAll(".btn-move-down").forEach(btn => {
     btn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const idx = parseInt(e.currentTarget.dataset.index);
       if (idx < sectionsList.length - 1) {
         saveCurrentInputValues();
@@ -263,6 +290,7 @@ function attachCardEvents() {
   // Delete
   document.querySelectorAll(".btn-delete-sec").forEach(btn => {
     btn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const idx = parseInt(e.currentTarget.dataset.index);
       if (confirm(`Are you sure you want to delete Section ${idx + 1}?`)) {
         saveCurrentInputValues();

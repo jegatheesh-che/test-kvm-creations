@@ -1,16 +1,17 @@
-import { auth } from "/js/firebase-config.js?v=2";
+import { auth, ADMIN_UID } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const userEmail = document.getElementById("userEmail");
 const logoutBtn = document.getElementById("logoutBtn");
 
-// Enforce Firebase Authentication guard
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    // Unauthenticated user -> Redirect to login
-    window.location.href = "/admin/login";
+// Enforce Firebase Authentication & Admin Authorization guard
+onAuthStateChanged(auth, async (user) => {
+  if (!user || user.uid !== ADMIN_UID) {
+    // Unauthenticated or unauthorized user -> Sign out & Redirect to login
+    if (user) await signOut(auth);
+    window.location.href = "/admin/login.html";
   } else {
-    // Authenticated user -> Render dashboard
+    // Authorized admin user -> Render dashboard
     if (userEmail) {
       userEmail.textContent = user.email || "Authenticated Admin";
     }

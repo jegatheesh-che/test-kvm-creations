@@ -1,5 +1,5 @@
 // ================================================
-// RAMG PRODUCTION — ADMIN REVIEWS MANAGER
+// KVM CREATIONS STUDIO — ADMIN REVIEWS MANAGER
 // Full CRUD Management (Add, Edit, Delete Customer Reviews & Stars)
 // ================================================
 
@@ -7,9 +7,9 @@ import { auth, db } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Cloudinary Configuration
-const CLOUD_NAME = "dxbdobdxt";
-const UPLOAD_PRESET = "website_gallery";
+// Cloudinary Configuration (KVM Creations)
+const CLOUD_NAME = "vfcl8vef";
+const UPLOAD_PRESET = "kvm_creations_gallery";
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 // Navigation Tabs

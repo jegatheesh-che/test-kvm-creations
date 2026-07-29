@@ -469,38 +469,48 @@ if (vogueWrap) {
 // -----------------------------------------------
 function bindGalleryFilters() {
   const filterBtns = document.querySelectorAll('.gallery-filters .filter-btn');
-  const galleryCards = document.querySelectorAll('.gallery-masonry .gallery-card');
   
-  if (filterBtns.length > 0 && galleryCards.length > 0) {
+  if (filterBtns.length > 0) {
     filterBtns.forEach(btn => {
-      // Remove old listener if re-binding
-      btn.onclick = () => {
+      btn.onclick = (e) => {
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
-        const filterValue = btn.getAttribute('data-filter');
+        const filterValue = (btn.getAttribute('data-filter') || 'all').toLowerCase().trim();
         const currentCards = document.querySelectorAll('.gallery-masonry .gallery-card');
         
         currentCards.forEach(card => {
-          const cardCategory = card.getAttribute('data-category');
+          gsap.killTweensOf(card);
+          const cardCategory = (card.getAttribute('data-category') || '').toLowerCase().trim();
+          
           if (filterValue === 'all' || cardCategory === filterValue) {
-            card.style.display = 'block';
+            card.style.display = 'inline-block';
             gsap.to(card, {
               opacity: 1,
               scale: 1,
-              duration: 0.4,
+              duration: 0.35,
               ease: 'power2.out'
             });
           } else {
             gsap.to(card, {
               opacity: 0,
-              scale: 0.85,
-              duration: 0.3,
+              scale: 0.9,
+              duration: 0.25,
               ease: 'power2.in',
-              onComplete: () => { card.style.display = 'none'; }
+              onComplete: () => {
+                card.style.display = 'none';
+              }
             });
           }
         });
+
+        // Center active filter button in viewport on small screens
+        if (window.innerWidth <= 768) {
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+        if (typeof lenis !== 'undefined') lenis.resize();
       };
     });
   }
@@ -509,8 +519,8 @@ function bindGalleryFilters() {
 // Global UI re-initialization helper for dynamic Firestore card rendering
 window.reinitGalleryUI = function() {
   // 1. Wrap unwrapped gallery images in shiny-wrapper
-  document.querySelectorAll('img:not(.nav__logo-img, .cursor__img, .home-about__logo, .video-badge img, .round-badge img)').forEach(el => {
-    if (el.closest('.hero__slide') || el.closest('.shiny-wrapper')) return;
+  document.querySelectorAll('.gallery-card img, .collage-item img').forEach(el => {
+    if (el.closest('.shiny-wrapper')) return;
     const wrapper = document.createElement('div');
     wrapper.className = 'shiny-wrapper';
     el.parentNode.insertBefore(wrapper, el);
@@ -528,10 +538,11 @@ window.reinitGalleryUI = function() {
 document.addEventListener('DOMContentLoaded', () => {
   bindGalleryFilters();
 
-  // LIGHTBOX MODAL LOGIC
+  // LIGHTBOX MODAL LOGIC (Images & YouTube Videos)
   const lightbox = document.getElementById('galleryLightbox');
   if (lightbox) {
     const lightboxImg = lightbox.querySelector('.lightbox-img');
+    const lightboxVideo = lightbox.querySelector('.lightbox-video');
     const lightboxTitle = lightbox.querySelector('.lightbox-title');
     const lightboxSub = lightbox.querySelector('.lightbox-sub');
     const closeBtn = lightbox.querySelector('.lightbox-close');
@@ -549,21 +560,47 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawCat = card.getAttribute('data-category') || 'Portfolio';
       const cat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
       const title = card.getAttribute('data-title') || (img ? img.alt : 'KVM Showcase');
+      const youtubeId = card.getAttribute('data-youtube-id');
+      const isVideo = card.getAttribute('data-media-type') === 'video' || !!youtubeId;
       const fullResUrl = card.getAttribute('data-full') || (img ? img.src : '');
       
-      if (lightboxImg) {
-        lightboxImg.src = fullResUrl;
-        lightboxImg.alt = title;
+      if (isVideo && youtubeId) {
+        if (lightboxImg) lightboxImg.style.display = 'none';
+        if (lightboxVideo) {
+          lightboxVideo.style.display = 'block';
+          lightboxVideo.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+        }
+      } else {
+        if (lightboxVideo) {
+          lightboxVideo.style.display = 'none';
+          lightboxVideo.src = '';
+        }
+        if (lightboxImg) {
+          lightboxImg.style.display = 'block';
+          lightboxImg.src = fullResUrl;
+          lightboxImg.alt = title;
+        }
       }
+
       if (lightboxTitle) lightboxTitle.textContent = title;
       if (lightboxSub) lightboxSub.textContent = cat;
     }
 
     function openLightbox(card) {
-      const visibleCards = Array.from(document.querySelectorAll('.gallery-card, .collage-item, .home-featured__item, .contact-split-media, .hero__image-wrapper, .editorial-image-wrapper')).filter(
-        c => window.getComputedStyle(c).display !== 'none'
-      );
-      activeCardsArray = visibleCards.length > 0 ? visibleCards : Array.from(document.querySelectorAll('.gallery-card, .collage-item, .home-featured__item, .contact-split-media, .hero__image-wrapper, .editorial-image-wrapper'));
+      const activeFilterBtn = document.querySelector('.gallery-filters .filter-btn.active');
+      const currentFilter = activeFilterBtn ? activeFilterBtn.getAttribute('data-filter') : 'all';
+      const allCards = Array.from(document.querySelectorAll('.gallery-masonry .gallery-card'));
+
+      const visibleCards = allCards.filter(c => {
+        if (currentFilter === 'all') return true;
+        const cat = (c.getAttribute('data-category') || '').toLowerCase().trim();
+        return cat === currentFilter.toLowerCase().trim();
+      });
+
+      activeCardsArray = visibleCards.length > 0 ? visibleCards : allCards;
+      if (!activeCardsArray.includes(card)) {
+        activeCardsArray = [card, ...activeCardsArray];
+      }
       
       currentIndex = activeCardsArray.indexOf(card);
       if (currentIndex === -1) currentIndex = 0;
@@ -576,9 +613,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeLightbox() {
       lightbox.classList.remove('active');
       document.body.style.overflow = '';
+      if (lightboxVideo) {
+        lightboxVideo.src = '';
+        lightboxVideo.style.display = 'none';
+      }
     }
 
-    // Delegation click listener to support both static and dynamic Firestore cards
+    // Delegation click listener to support static and dynamic Firestore cards
     document.addEventListener('click', (e) => {
       const card = e.target.closest('.gallery-card, .collage-item, .home-featured__item, .contact-split-media, .hero__image-wrapper, .editorial-image-wrapper');
       if (card && lightbox && !e.target.closest('.lightbox-modal')) {

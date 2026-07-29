@@ -194,8 +194,8 @@ function renderAboutSections() {
           </div>
 
           <div class="form-group">
-            <label class="form-label-gold">Section Heading *</label>
-            <input type="text" class="sec-input-title" value="${escapeHtml(sec.title || '')}" placeholder="e.g., About KVM Creations, Hi I'm Mathu" required />
+            <label class="form-label-gold">Section Heading (Optional)</label>
+            <input type="text" class="sec-input-title" value="${escapeHtml(sec.title || '')}" placeholder="Optional heading (or leave blank)" />
           </div>
         </div>
 

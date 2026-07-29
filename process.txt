@@ -267,6 +267,17 @@ Actions Taken:
 - Updated admin/js/admin-gallery.js to allow uploading images without requiring a title.
 - Updated js/main.js Lightbox rendering to cleanly omit the title heading if a photo has no title.
 
+
+--------------------------------------------------------------------------------
+
+[2026-07-29 21:23:00 IST]
+User Prompt: remove the title from about page. and remove all title names also
+Actions Taken:
+- Removed `<h1 class="hero__title">` and `<h2>` section title elements from js/about-renderer.js.
+- Updated About page layout to display tagline, story narrative paragraphs, and image assets cleanly without section headings.
+- Made section heading input optional in admin/js/admin-about.js (`Section Heading (Optional)`).
+
 ================================================================================
+
 
 

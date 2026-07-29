@@ -66,9 +66,6 @@ async function loadDynamicAboutContent() {
           <section class="hero__layout">
             <div class="hero__text-col">
               <p class="hero__eyebrow reveal">${sec.eyebrow || ''}</p>
-              <div class="hero__title-wrap">
-                <h1 class="hero__title">${sec.title || ''}</h1>
-              </div>
               
               <p class="hero__desc reveal reveal-delay-1">${firstPara}</p>
 
@@ -80,7 +77,7 @@ async function loadDynamicAboutContent() {
             
             <div class="hero__image-col reveal">
               <div class="hero__image-wrapper">
-                <img src="${sec.imageUrl || ''}" alt="${sec.title || 'About KVM Creations'}" class="hero__image" loading="eager" />
+                <img src="${sec.imageUrl || ''}" alt="${sec.eyebrow || 'About KVM Creations'}" class="hero__image" loading="eager" />
               </div>
             </div>
           </section>
@@ -112,14 +109,13 @@ async function loadDynamicAboutContent() {
 
         const imageColHtml = `
           <div class="editorial-image-wrapper">
-            <img src="${sec.imageUrl || ''}" alt="${sec.title || 'Story'}" loading="lazy" />
+            <img src="${sec.imageUrl || ''}" alt="${sec.eyebrow || 'Story'}" loading="lazy" />
           </div>
         `;
 
         const textColHtml = `
           <div class="editorial-text-col">
             <p class="hero__eyebrow">${sec.eyebrow || ''}</p>
-            <h2>${sec.title || ''}</h2>
             <p style="margin-bottom: 0.5rem;">${firstPara}</p>
 
             ${moreContentHtml}

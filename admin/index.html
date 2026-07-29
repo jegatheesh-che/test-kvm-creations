@@ -137,11 +137,7 @@
         <header class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
             <h2>About Page Story Builder</h2>
-            <p>Create, customize, reorder, and manage up to 10 story sections for your About page.</p>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span id="adminAboutSectionCounter" style="font-size: 0.9rem; color: var(--clr-gold); font-weight: 600;">0 / 10 Sections</span>
-            <button type="button" id="btnAddAboutSection" class="btn-primary" style="margin-top: 0;">+ Add New Section</button>
+            <p>Manage and reorder your story sections. Changes save directly to Firestore.</p>
           </div>
         </header>
 
@@ -149,17 +145,22 @@
           <p>Loading About page content...</p>
         </div>
 
-        <form id="aboutContentForm" class="admin-form" style="display: flex; flex-direction: column; gap: 24px;">
-          <div id="adminAboutSectionsContainer" style="display: flex; flex-direction: column; gap: 24px;">
+        <form id="aboutContentForm" class="admin-form" style="display: flex; flex-direction: column; gap: 16px;">
+          <div id="adminAboutSectionsContainer" style="display: flex; flex-direction: column; gap: 16px;">
             <!-- Dynamic Section Cards Rendered via admin-about.js -->
           </div>
 
           <div id="aboutFormError" class="auth-error-msg" style="display: none;"></div>
 
-          <div class="about-submit-wrapper" style="margin-top: 16px; display: flex; justify-content: center; align-items: center; width: 100%;">
-            <button type="submit" id="aboutSubmitBtn" class="btn-primary" style="padding: 16px 40px; font-size: 1rem; margin: 0 auto; text-align: center;">Save All About Sections</button>
+          <div class="about-save-bar">
+            <p class="about-save-bar__hint">All sections save together — reorder, edit, then hit Save.</p>
+            <button type="submit" id="aboutSubmitBtn">Save All Sections</button>
           </div>
         </form>
+
+        <!-- Hidden trigger button (used by ghost card click) -->
+        <button type="button" id="btnAddAboutSection" style="display: none;"></button>
+        <span id="adminAboutSectionCounter" style="display: none;"></span>
       </section>
     </main>
 

@@ -150,6 +150,18 @@ function renderAboutSections() {
 
   updateCounter();
 
+  // Inject progress bar above the section list
+  const progressPct = Math.round((sectionsList.length / MAX_SECTIONS) * 100);
+  const progressHtml = `
+    <div class="about-section-progress">
+      <div class="about-section-progress__bar">
+        <div class="about-section-progress__fill" style="width: ${progressPct}%;"></div>
+      </div>
+      <span class="about-section-progress__label">${sectionsList.length} / ${MAX_SECTIONS}</span>
+    </div>
+  `;
+  sectionsContainer.insertAdjacentHTML('afterbegin', progressHtml);
+
   sectionsList.forEach((sec, idx) => {
     const card = document.createElement("div");
     card.className = `about-section-card ${idx === 0 ? 'is-expanded' : 'is-collapsed'}`;
@@ -159,25 +171,25 @@ function renderAboutSections() {
     const isLast = idx === sectionsList.length - 1;
     const previewImg = sec.imageUrl || '/assets/about/about.webp';
 
+    // Show tagline as primary header info (title was removed)
+    const headerPrimary = escapeHtml(sec.eyebrow || 'Untitled Story Section');
+    const headerSub = sec.imageUrl ? 'Photo attached' : 'No photo — click to add';
+
     card.innerHTML = `
-      <div class="about-section-card__header" title="Click to toggle section details">
+      <div class="about-section-card__header" title="Click to expand/collapse section">
         <div class="about-section-card__title-group">
-          <span class="about-section-card__badge">Section 0${idx + 1}</span>
-          <img class="about-section-card__header-thumb" src="${previewImg}" alt="Thumb" />
+          <span class="about-section-card__badge">${String(idx + 1).padStart(2, '0')}</span>
+          <img class="about-section-card__header-thumb" src="${previewImg}" alt="Section ${idx + 1}" />
           <div class="about-section-card__header-titles">
-            <h3 class="about-section-header-title">
-              ${escapeHtml(sec.title || sec.eyebrow || 'Untitled Story Section')}
-            </h3>
-            <p class="about-section-header-sub">
-              ${escapeHtml(sec.eyebrow || 'Story Section')}
-            </p>
+            <h3 class="about-section-header-title">${headerPrimary}</h3>
+            <p class="about-section-header-sub">${headerSub}</p>
           </div>
         </div>
 
         <div class="about-section-card__actions" onclick="event.stopPropagation();">
-          <button type="button" class="btn-icon-action btn-move-up" data-index="${idx}" ${isFirst ? 'disabled' : ''} title="Move Up">&uarr;</button>
-          <button type="button" class="btn-icon-action btn-move-down" data-index="${idx}" ${isLast ? 'disabled' : ''} title="Move Down">&darr;</button>
-          <button type="button" class="btn-icon-action btn-icon-delete btn-delete-sec" data-index="${idx}" title="Delete Section">&times;</button>
+          <button type="button" class="btn-icon-action btn-move-up" data-index="${idx}" ${isFirst ? 'disabled' : ''} title="Move Up">↑</button>
+          <button type="button" class="btn-icon-action btn-move-down" data-index="${idx}" ${isLast ? 'disabled' : ''} title="Move Down">↓</button>
+          <button type="button" class="btn-icon-action btn-icon-delete btn-delete-sec" data-index="${idx}" title="Delete Section">✕</button>
           <button type="button" class="btn-icon-action btn-toggle-expand" data-index="${idx}" title="Toggle Details">
             <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -189,19 +201,19 @@ function renderAboutSections() {
       <div class="about-section-card__body">
         <div class="form-group">
           <label class="form-label-gold">Section Tagline / Subtitle *</label>
-          <input type="text" class="sec-input-eyebrow" value="${escapeHtml(sec.eyebrow || '')}" placeholder="e.g., Visual Storytellers, About Me" required />
+          <input type="text" class="sec-input-eyebrow" value="${escapeHtml(sec.eyebrow || '')}" placeholder="e.g., Visual Storytellers · About Me" required />
         </div>
 
         <div class="form-group">
-          <label class="form-label-gold">Section Story Narrative (Double space paragraph breaks) *</label>
-          <textarea class="admin-textarea sec-input-desc" rows="4" placeholder="Write your section narrative..." required>${escapeHtml(sec.desc || '')}</textarea>
+          <label class="form-label-gold">Story Narrative</label>
+          <textarea class="admin-textarea sec-input-desc" rows="7" placeholder="Write your section story here...&#10;&#10;Use double line breaks to create new paragraphs on the About page." required>${escapeHtml(sec.desc || '')}</textarea>
         </div>
 
         <div class="custom-upload-zone">
           <div class="custom-upload-zone__info">
-            <label class="form-label-gold" style="margin-bottom: 6px; display: block;">Section Photo Asset</label>
+            <label class="form-label-gold">Section Photo</label>
             <label class="custom-upload-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -213,8 +225,8 @@ function renderAboutSections() {
           </div>
 
           <div class="custom-upload-zone__preview-wrap">
-            <span class="preview-label">Preview</span>
-            <img class="sec-img-preview" src="${previewImg}" alt="Preview" />
+            <span class="preview-label">Current</span>
+            <img class="sec-img-preview" src="${previewImg}" alt="Section Preview" />
           </div>
         </div>
       </div>
@@ -222,6 +234,25 @@ function renderAboutSections() {
 
     sectionsContainer.appendChild(card);
   });
+
+  // Ghost "Add New Section" card at bottom
+  const isAtMax = sectionsList.length >= MAX_SECTIONS;
+  const ghostCard = document.createElement("button");
+  ghostCard.type = "button";
+  ghostCard.className = "about-add-section-card";
+  ghostCard.disabled = isAtMax;
+  ghostCard.title = isAtMax ? "Maximum 10 sections reached" : "Add a new story section";
+  ghostCard.innerHTML = `
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+    Add New Story Section
+  `;
+  ghostCard.addEventListener("click", () => {
+    if (btnAddSection) btnAddSection.click();
+  });
+  sectionsContainer.appendChild(ghostCard);
 
   attachCardEvents();
 }

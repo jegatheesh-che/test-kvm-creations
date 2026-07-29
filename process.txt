@@ -277,7 +277,20 @@ Actions Taken:
 - Updated About page layout to display tagline, story narrative paragraphs, and image assets cleanly without section headings.
 - Made section heading input optional in admin/js/admin-about.js (`Section Heading (Optional)`).
 
+
+--------------------------------------------------------------------------------
+
+[2026-07-29 21:27:00 IST]
+User Prompt: remove all titles like a wedding,shorts...etc no need for title in my whole websie. no optional
+Actions Taken:
+- Completely removed Title input field (`#galleryTitle`) from Admin Gallery modal (`admin/index.html`).
+- Completely removed Section Heading input field (`.sec-input-title`) from Admin About Story builder (`admin/js/admin-about.js`).
+- Stripped all `data-title` attributes and title text from static/dynamic gallery cards, collage items, and Lightbox modal (`gallery.html`, `js/gallery-renderer.js`, `js/main.js`).
+- Purged title attributes and title fields across all admin JS modules (`admin-gallery.js`, `admin-about.js`).
+- The entire website and admin panel now operate 100% title-free!
+
 ================================================================================
+
 
 
 

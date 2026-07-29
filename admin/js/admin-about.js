@@ -187,16 +187,9 @@ function renderAboutSections() {
       </div>
 
       <div class="about-section-card__body">
-        <div class="about-form-grid">
-          <div class="form-group">
-            <label class="form-label-gold">Eyebrow Tagline *</label>
-            <input type="text" class="sec-input-eyebrow" value="${escapeHtml(sec.eyebrow || '')}" placeholder="e.g., Visual Storytellers, About Me" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label-gold">Section Heading (Optional)</label>
-            <input type="text" class="sec-input-title" value="${escapeHtml(sec.title || '')}" placeholder="Optional heading (or leave blank)" />
-          </div>
+        <div class="form-group">
+          <label class="form-label-gold">Section Tagline / Subtitle *</label>
+          <input type="text" class="sec-input-eyebrow" value="${escapeHtml(sec.eyebrow || '')}" placeholder="e.g., Visual Storytellers, About Me" required />
         </div>
 
         <div class="form-group">
@@ -327,7 +320,6 @@ function saveCurrentInputValues() {
   cards.forEach((card, idx) => {
     if (sectionsList[idx]) {
       sectionsList[idx].eyebrow = card.querySelector(".sec-input-eyebrow")?.value.trim() || "";
-      sectionsList[idx].title = card.querySelector(".sec-input-title")?.value.trim() || "";
       sectionsList[idx].desc = card.querySelector(".sec-input-desc")?.value.trim() || "";
     }
   });

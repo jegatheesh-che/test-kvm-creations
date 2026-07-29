@@ -49,7 +49,6 @@ async function loadDynamicGallery() {
       
       const category = (item.category || "uncategorized").toLowerCase().trim();
       card.setAttribute("data-category", category);
-      card.setAttribute("data-title", item.title || "");
       
       const isVideo = item.mediaType === "video" || !!item.youtubeId;
       let imgUrl = "";
@@ -69,7 +68,7 @@ async function loadDynamicGallery() {
       card.setAttribute("data-full", fullResUrl);
 
       card.innerHTML = `
-        <img src="${imgUrl}" alt="${item.title || 'Gallery Item'}" loading="lazy" />
+        <img src="${imgUrl}" alt="${category}" loading="lazy" />
         <div class="gallery-card__expand">&#10530;</div>
         ${isVideo ? '<div class="video-badge" style="position:absolute; top:12px; right:12px; background:rgba(10,10,8,0.85); backdrop-filter:blur(8px); color:#bd9b52; border:1px solid rgba(189,155,82,0.3); padding:5px 12px; border-radius:20px; font-size:11px; letter-spacing:1px; text-transform:uppercase; z-index:2; pointer-events:none;">▶ Video</div>' : ''}
       `;

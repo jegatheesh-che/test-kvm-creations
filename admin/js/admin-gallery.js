@@ -29,7 +29,6 @@ const galleryModalSubmit = document.getElementById("galleryModalSubmit");
 
 // Form Inputs
 const inputId = document.getElementById("galleryId");
-const inputTitle = document.getElementById("galleryTitle");
 const inputCategory = document.getElementById("galleryCategory");
 const inputMediaType = document.getElementById("galleryMediaType");
 const inputImage = document.getElementById("galleryImage");
@@ -93,33 +92,33 @@ async function loadGalleryItems() {
     updateBulkActionUI();
 
 const DEFAULT_SEED_GALLERY = [
-  { title: "The First Glance", category: "weddings", mediaType: "image", image: "/assets/images/img1.webp", order: 1 },
-  { title: "Elegance in Motion", category: "portraits", mediaType: "image", image: "/assets/images/img2.webp", order: 2 },
-  { title: "Moroccan Sunrise", category: "destinations", mediaType: "image", image: "/assets/images/img3.webp", order: 3 },
-  { title: "Vogue Whispers", category: "editorial", mediaType: "image", image: "/assets/images/img4.webp", order: 4 },
-  { title: "Sacred Vows", category: "weddings", mediaType: "image", image: "/assets/images/img5.webp", order: 5 },
-  { title: "Alpine Serenade", category: "destinations", mediaType: "image", image: "/assets/images/img6.webp", order: 6 },
-  { title: "Gilded Shadows", category: "portraits", mediaType: "image", image: "/assets/images/img7.webp", order: 7 },
-  { title: "Monochrome Solitude", category: "editorial", mediaType: "image", image: "/assets/images/img8.webp", order: 8 },
-  { title: "Royal Celebration", category: "weddings", mediaType: "image", image: "/assets/images/img9.webp", order: 9 },
-  { title: "Subtle Intimacy", category: "portraits", mediaType: "image", image: "/assets/images/img10.webp", order: 10 },
-  { title: "Icelandic Breeze", category: "destinations", mediaType: "image", image: "/assets/images/img11.webp", order: 11 },
-  { title: "Golden Hour Grace", category: "editorial", mediaType: "image", image: "/assets/images/img12.webp", order: 12 },
-  { title: "Forever Yours", category: "weddings", mediaType: "image", image: "/assets/images/img13.webp", order: 13 },
-  { title: "Radiant Essence", category: "portraits", mediaType: "image", image: "/assets/images/img14.webp", order: 14 },
-  { title: "Amalfi Sunset", category: "destinations", mediaType: "image", image: "/assets/images/img15.webp", order: 15 },
-  { title: "Velvet Dusk", category: "editorial", mediaType: "image", image: "/assets/images/img16.webp", order: 16 },
-  { title: "Unconditional Promise", category: "weddings", mediaType: "image", image: "/assets/images/img17.webp", order: 17 },
-  { title: "Poetic Silence", category: "portraits", mediaType: "image", image: "/assets/images/img18.webp", order: 18 },
-  { title: "Highland Majesty", category: "destinations", mediaType: "image", image: "/assets/images/img19.webp", order: 19 },
-  { title: "Architectural Form", category: "editorial", mediaType: "image", image: "/assets/images/img20.webp", order: 20 },
-  { title: "Bridal Majesty", category: "weddings", mediaType: "image", image: "/assets/images/img21.webp", order: 21 },
-  { title: "Timeless Gaze", category: "portraits", mediaType: "image", image: "/assets/images/img22.webp", order: 22 },
-  { title: "Desert Mirage", category: "destinations", mediaType: "image", image: "/assets/images/img23.webp", order: 23 },
-  { title: "Modern Nostalgia", category: "editorial", mediaType: "image", image: "/assets/images/img24.webp", order: 24 },
-  { title: "First Dance Romance", category: "weddings", mediaType: "image", image: "/assets/images/img25.webp", order: 25 },
-  { title: "Santorini Horizons", category: "destinations", mediaType: "image", image: "/assets/images/img28.webp", order: 26 },
-  { title: "Expressive Soul", category: "portraits", mediaType: "image", image: "/assets/images/img30.webp", order: 27 }
+  { category: "weddings", mediaType: "image", image: "/assets/images/img1.webp", order: 1 },
+  { category: "portraits", mediaType: "image", image: "/assets/images/img2.webp", order: 2 },
+  { category: "destinations", mediaType: "image", image: "/assets/images/img3.webp", order: 3 },
+  { category: "editorial", mediaType: "image", image: "/assets/images/img4.webp", order: 4 },
+  { category: "weddings", mediaType: "image", image: "/assets/images/img5.webp", order: 5 },
+  { category: "destinations", mediaType: "image", image: "/assets/images/img6.webp", order: 6 },
+  { category: "portraits", mediaType: "image", image: "/assets/images/img7.webp", order: 7 },
+  { category: "editorial", mediaType: "image", image: "/assets/images/img8.webp", order: 8 },
+  { category: "weddings", mediaType: "image", image: "/assets/images/img9.webp", order: 9 },
+  { category: "portraits", mediaType: "image", image: "/assets/images/img10.webp", order: 10 },
+  { category: "destinations", mediaType: "image", image: "/assets/images/img11.webp", order: 11 },
+  { category: "editorial", mediaType: "image", image: "/assets/images/img12.webp", order: 12 },
+  { category: "weddings", mediaType: "image", image: "/assets/images/img13.webp", order: 13 },
+  { category: "portraits", mediaType: "image", image: "/assets/images/img14.webp", order: 14 },
+  { category: "destinations", mediaType: "image", image: "/assets/images/img15.webp", order: 15 },
+  { category: "editorial", mediaType: "image", image: "/assets/images/img16.webp", order: 16 },
+  { category: "weddings", mediaType: "image", image: "/assets/images/img17.webp", order: 17 },
+  { category: "portraits", mediaType: "image", image: "/assets/images/img18.webp", order: 18 },
+  { category: "destinations", mediaType: "image", image: "/assets/images/img19.webp", order: 19 },
+  { category: "editorial", mediaType: "image", image: "/assets/images/img20.webp", order: 20 },
+  { category: "weddings", mediaType: "image", image: "/assets/images/img21.webp", order: 21 },
+  { category: "portraits", mediaType: "image", image: "/assets/images/img22.webp", order: 22 },
+  { category: "destinations", mediaType: "image", image: "/assets/images/img23.webp", order: 23 },
+  { category: "editorial", mediaType: "image", image: "/assets/images/img24.webp", order: 24 },
+  { category: "weddings", mediaType: "image", image: "/assets/images/img25.webp", order: 25 },
+  { category: "destinations", mediaType: "image", image: "/assets/images/img28.webp", order: 26 },
+  { category: "portraits", mediaType: "image", image: "/assets/images/img30.webp", order: 27 }
 ];
 
 async function seedDefaultGallery() {
@@ -220,9 +219,8 @@ function createAdminGalleryCard(item, index = 0) {
     <div class="admin-gallery-item__checkbox-wrapper">
       <input type="checkbox" class="admin-gallery-item__checkbox" data-id="${item.id}" />
     </div>
-    <img src="${thumbUrl}" alt="${item.title || 'Gallery Item'}" class="admin-gallery-item__thumb" loading="lazy" />
+    <img src="${thumbUrl}" alt="Gallery Item" class="admin-gallery-item__thumb" loading="lazy" />
     <div class="admin-gallery-item__info">
-      <h3 class="admin-gallery-item__title" title="${item.title || ''}">${item.title || 'Untitled'}</h3>
       <div class="admin-gallery-item__meta">
         <span class="admin-gallery-item__category">${item.category || 'Uncategorized'}</span>
         <div class="admin-gallery-item__order-editor">
@@ -425,7 +423,6 @@ function openEditModal(item) {
   resetForm();
   galleryModalTitle.textContent = "Edit Item";
   inputId.value = item.id;
-  inputTitle.value = item.title;
   inputCategory.value = item.category;
   inputMediaType.value = item.mediaType;
   
@@ -565,13 +562,11 @@ galleryForm.addEventListener("submit", async (e) => {
         // Save Firestore Document
         uploadProgressStepText.textContent = `Saving "${file.name}" to database...`;
 
-        const itemTitle = baseTitle ? (totalFiles > 1 ? `${baseTitle} #${i + 1}` : baseTitle) : "";
         const itemOrder = currentMaxOrder + i + 1;
         const mod = itemOrder % 4;
         const tiltClass = mod === 1 ? "tilt-left" : mod === 3 ? "tilt-right" : "";
 
         const docData = {
-          title: itemTitle,
           category,
           mediaType: "image",
           cloudinaryUrl: uploadData.secure_url,

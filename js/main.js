@@ -559,6 +559,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const img = card.querySelector('img');
       const rawCat = card.getAttribute('data-category') || 'Portfolio';
       const cat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
+      
+      const isVideo = card.getAttribute('data-media-type') === 'video' || !!card.getAttribute('data-youtube-id');
+      const youtubeId = card.getAttribute('data-youtube-id');
+      const fullResUrl = card.getAttribute('data-full') || (img ? img.src : '');
+
       if (isVideo && youtubeId) {
         if (lightboxImg) lightboxImg.style.display = 'none';
         if (lightboxVideo) {

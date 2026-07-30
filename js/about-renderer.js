@@ -163,6 +163,8 @@ function attachSeeMoreListeners() {
       const isExpanded = newBtn.getAttribute('aria-expanded') === 'true';
       
       if (isExpanded) {
+        moreContent.style.maxHeight = moreContent.scrollHeight + 'px';
+        void moreContent.offsetHeight; // force reflow
         moreContent.style.maxHeight = '0px';
         moreContent.style.opacity = '0';
         newBtn.innerHTML = 'See More <span class="plus-minus" style="font-size: 0.9rem;">+</span>';
@@ -172,6 +174,11 @@ function attachSeeMoreListeners() {
         moreContent.style.opacity = '1';
         newBtn.innerHTML = 'See Less <span class="plus-minus" style="font-size: 0.9rem;">&minus;</span>';
         newBtn.setAttribute('aria-expanded', 'true');
+        setTimeout(() => {
+          if (newBtn.getAttribute('aria-expanded') === 'true') {
+            moreContent.style.maxHeight = 'none';
+          }
+        }, 500);
       }
       
       setTimeout(() => {

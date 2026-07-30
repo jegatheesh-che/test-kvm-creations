@@ -477,7 +477,6 @@ galleryForm.addEventListener("submit", async (e) => {
   galleryFormError.style.display = "none";
   
   const isEdit = !!inputId.value;
-  const baseTitle = inputTitle.value.trim();
   const category = inputCategory.value;
   const mediaType = inputMediaType.value;
   
@@ -492,7 +491,7 @@ galleryForm.addEventListener("submit", async (e) => {
       galleryModalSubmit.classList.add('is-loading');
       galleryModalSubmit.textContent = "Saving...";
 
-      const updateData = { title: baseTitle, category };
+      const updateData = { category };
       if (mediaType === "video") {
         const rawYt = inputYoutubeId.value.trim();
         const yId = extractYoutubeId(rawYt);
@@ -504,7 +503,7 @@ galleryForm.addEventListener("submit", async (e) => {
       
       closeModals();
       if (window.showToast) {
-        window.showToast(`✏️ Gallery item "${baseTitle}" updated!`, "info");
+        window.showToast(`✏️ Gallery item updated successfully!`, "info");
       }
       loadGalleryItems();
 
@@ -610,7 +609,6 @@ galleryForm.addEventListener("submit", async (e) => {
       const rawYt = inputYoutubeId.value.trim();
       const youtubeId = extractYoutubeId(rawYt);
       if (!youtubeId) throw new Error("YouTube link or ID is required.");
-      const title = baseTitle || "Cinematic Video Showcase";
 
       const maxOrder = currentGalleryItems.reduce((max, item) => Math.max(max, item.order || 0), 0);
       const newOrder = maxOrder + 1;
@@ -618,7 +616,6 @@ galleryForm.addEventListener("submit", async (e) => {
       const tiltClass = mod === 1 ? "tilt-left" : mod === 3 ? "tilt-right" : "";
 
       const docData = {
-        title,
         category,
         mediaType: "video",
         youtubeId,
@@ -632,7 +629,7 @@ galleryForm.addEventListener("submit", async (e) => {
 
       closeModals();
       if (window.showToast) {
-        window.showToast(`✨ Video item "${title}" added successfully!`, "success");
+        window.showToast(`✨ Video item added successfully!`, "success");
       }
       loadGalleryItems();
     }
@@ -724,7 +721,8 @@ async function handleOrderChange(id, newOrderStr) {
 // ================================================
 function openDeleteModal(item) {
   itemToDelete = item;
-  deleteItemTitle.textContent = `"${item.title}"`;
+  const displayLabel = item.category ? `Category: ${item.category.toUpperCase()}` : "Selected Gallery Item";
+  deleteItemTitle.textContent = displayLabel;
   deleteModalError.style.display = "none";
   deleteModalConfirm.textContent = "Delete Permanently";
   deleteModalConfirm.classList.remove("is-loading");
@@ -740,29 +738,32 @@ deleteModalConfirm.addEventListener("click", async () => {
 
   try {
     if (itemToDelete.mediaType === "image" && itemToDelete.cloudinaryPublicId) {
-      // 1. Authenticate with Vercel API
-      const user = auth.currentUser;
-      if (!user) throw new Error("You must be logged in.");
-      
-      const idToken = await user.getIdToken();
-      
-      // 2. Call secure serverless deletion endpoint
-      const res = await fetch("/api/delete-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          idToken: idToken,
-          publicId: itemToDelete.cloudinaryPublicId
-        })
-      });
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const idToken = await user.getIdToken();
+          const res = await fetch("/api/delete-image", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              idToken: idToken,
+              publicId: itemToDelete.cloudinaryPublicId
+            })
+          });
 
-      const result = await res.json();
-      if (!res.ok) {
-        throw new Error(result.error || "Failed to delete image from Cloudinary.");
+          const text = await res.text();
+          let result = {};
+          try { result = text ? JSON.parse(text) : {}; } catch (e) {}
+          if (!res.ok && result.error) {
+            console.warn("[Cloudinary Delete Notice]", result.error);
+          }
+        }
+      } catch (cloudErr) {
+        console.warn("[Cloudinary Delete Exception]", cloudErr);
       }
     }
 
-    // 3. Delete from Firestore (Only reached if Image Delete succeeded, or if it's a Video)
+    // Always delete from Firestore database
     await deleteDoc(doc(db, "gallery", itemToDelete.id));
 
     // 4. Cleanup and Refresh
@@ -854,17 +855,23 @@ if (deleteBulkModalConfirm) {
       
       const promises = itemsToDelete.map(async (item) => {
         if (item.mediaType === "image" && item.cloudinaryPublicId) {
-          const res = await fetch("/api/delete-image", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              idToken: idToken,
-              publicId: item.cloudinaryPublicId
-            })
-          });
-          const result = await res.json();
-          if (!res.ok) {
-            throw new Error(result.error || `Failed to delete ${item.title} from Cloudinary.`);
+          try {
+            const res = await fetch("/api/delete-image", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                idToken: idToken,
+                publicId: item.cloudinaryPublicId
+              })
+            });
+            const text = await res.text();
+            let result = {};
+            try { result = text ? JSON.parse(text) : {}; } catch (e) {}
+            if (!res.ok && result.error) {
+              console.warn("[Cloudinary Bulk Delete Notice]", result.error);
+            }
+          } catch (cloudErr) {
+            console.warn("[Cloudinary Bulk Deletion Exception]", cloudErr);
           }
         }
         await deleteDoc(doc(db, "gallery", item.id));
@@ -882,7 +889,7 @@ if (deleteBulkModalConfirm) {
       loadGalleryItems();
     } catch (error) {
       console.error("[Admin Gallery] Bulk Delete error:", error);
-      deleteBulkModalError.textContent = error.message;
+      deleteBulkModalError.textContent = error.message || "Bulk deletion failed.";
       deleteBulkModalError.style.display = "block";
       deleteBulkModalConfirm.classList.remove("is-loading");
       deleteBulkModalConfirm.textContent = "Delete Items";

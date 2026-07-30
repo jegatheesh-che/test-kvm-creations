@@ -62,24 +62,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// ================================================
-// TAB SWITCHING
-// ================================================
-if (tabGallery && tabReviews) {
-  tabGallery.addEventListener("click", () => {
-    tabGallery.classList.add("active");
-    tabReviews.classList.remove("active");
-    if (sectionGallery) sectionGallery.style.display = "block";
-    if (sectionReviews) sectionReviews.style.display = "none";
-  });
-
-  tabReviews.addEventListener("click", () => {
-    tabReviews.classList.add("active");
-    tabGallery.classList.remove("active");
-    if (sectionReviews) sectionReviews.style.display = "block";
-    if (sectionGallery) sectionGallery.style.display = "none";
-  });
-}
+// Tab switching is managed globally across Gallery, Reviews, and About sections in admin-about.js
 
 // ================================================
 const DEFAULT_SEED_REVIEWS = [

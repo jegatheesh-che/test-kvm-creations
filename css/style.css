@@ -1961,39 +1961,42 @@ button { cursor: pointer; border: none; background: none; transition: transform 
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
   margin: 0 auto 50px;
-  max-width: 900px;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border: none;
-  backdrop-filter: blur(16px);
-  border-radius: 0;
+  max-width: fit-content;
+  padding: 6px 10px;
+  background: #ffffff;
+  border: 1px solid var(--clr-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 40px;
 }
 
 .filter-btn {
   background: transparent;
   border: none;
-  color: var(--clr-cream);
+  color: var(--clr-muted);
   font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
+  font-weight: 500;
   letter-spacing: 2px;
   text-transform: uppercase;
   padding: 10px 24px;
-  border-radius: 0;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .filter-btn:hover {
   color: var(--clr-gold);
-  background: rgba(212,175,55,0.08);
+  background: rgba(149, 117, 49, 0.08);
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, rgba(212,175,55,0.25) 0%, rgba(139,101,8,0.35) 100%);
+  background: linear-gradient(135deg, #957531 0%, #bd9b52 100%);
   color: #ffffff;
-  box-shadow: 0 4px 20px rgba(212,175,55,0.2);
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(149, 117, 49, 0.35);
+  border-radius: 30px;
 }
 
 @media (max-width: 768px) {
@@ -2002,10 +2005,10 @@ button { cursor: pointer; border: none; background: none; transition: transform 
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    max-width: 100%;
+    max-width: calc(100% - 32px);
     margin: 0 16px 36px;
-    padding: 8px 12px;
-    border-radius: 0;
+    padding: 6px;
+    border-radius: 30px;
     scrollbar-width: none;
   }
   .gallery-filters::-webkit-scrollbar {

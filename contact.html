@@ -27,6 +27,97 @@
   <meta name="twitter:image" content="https://kvmcreations.ca/assets/images/img14.webp" />
 
   <link rel="stylesheet" href="css/style.css?v=2" />
+
+  <style>
+    /* Premium Progress Overlay */
+    .submit-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 8, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .submit-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .submit-modal {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 20px;
+      padding: 48px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .submit-overlay.active .submit-modal {
+      transform: translateY(0) scale(1);
+    }
+    .submit-modal-icon {
+      margin: 0 auto 24px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      position: relative;
+    }
+    .submit-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(212, 175, 55, 0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: submitSpin 1s linear infinite;
+    }
+    .submit-success-icon {
+      display: none;
+      color: #fff;
+    }
+    .submit-modal.success .submit-spinner {
+      display: none;
+    }
+    .submit-modal.success .submit-success-icon {
+      display: block;
+      animation: scalePop 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .submit-modal.success .submit-modal-icon {
+      background: var(--gold);
+      color: var(--dark);
+    }
+    .submit-modal-title {
+      font-family: 'Top Luxury', serif;
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      color: var(--cream);
+    }
+    .submit-modal-desc {
+      font-size: 0.95rem;
+      color: var(--clr-muted);
+      line-height: 1.5;
+    }
+    @keyframes submitSpin { 
+      to { transform: rotate(360deg); } 
+    }
+    @keyframes scalePop {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
   
@@ -238,6 +329,21 @@
     </div>
   </main>
 
+  <!-- PREMIUM SUBMISSION PROGRESS OVERLAY -->
+  <div class="submit-overlay" id="submitOverlay">
+    <div class="submit-modal" id="submitModal">
+      <div class="submit-modal-icon">
+        <div class="submit-spinner" id="submitSpinner"></div>
+        <svg class="submit-success-icon" id="submitSuccessIcon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <h3 class="submit-modal-title" id="submitModalTitle">Sending Inquiry</h3>
+      <p class="submit-modal-desc" id="submitModalDesc">Securely transmitting your details to our studio...</p>
+    </div>
+  </div>
+
   <!-- TOAST NOTIFICATION BADGE -->
   <div class="copy-toast" id="copyToast">Opening WhatsApp...</div>
 
@@ -325,86 +431,59 @@
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script src="js/main.js"></script>
 
-  <script>
-    function handleInquirySubmit(event) {
+     function handleInquirySubmit(event) {
       event.preventDefault(); // Prevent default browser submission
       
       const submitBtn = document.getElementById('submitBtn');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-        submitBtn.innerHTML = `
-          <svg class="spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-          </svg>
-          <span>Sending Inquiry...</span>
-        `;
+      const overlay = document.getElementById('submitOverlay');
+      const modal = document.getElementById('submitModal');
+      const title = document.getElementById('submitModalTitle');
+      const desc = document.getElementById('submitModalDesc');
+
+      if (submitBtn) submitBtn.disabled = true;
+
+      if (overlay) {
+        modal.classList.remove('success');
+        title.textContent = "Sending Inquiry";
+        desc.textContent = "Securely transmitting your details to our studio...";
+        overlay.classList.add('active');
       }
 
-      const toast = document.getElementById('copyToast');
-      if (toast) {
-        toast.textContent = "Sending inquiry securely...";
-        toast.classList.add('show');
-      }
-
-      // TODO: Replace with your actual Service ID and Template ID
+      // Send via EmailJS
       emailjs.sendForm('service_1x2za0m', 'template_gs3tjzq', event.target)
         .then(() => {
           formSubmitComplete();
         }, (error) => {
           console.error('EmailJS Error:', error);
-          if (toast) {
-            toast.textContent = "Failed to send inquiry. Please check your EmailJS keys.";
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
-          }
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-            submitBtn.innerHTML = `
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-              <span>Submit Inquiry</span>`;
+          if (overlay) {
+            title.textContent = "Submission Failed";
+            desc.textContent = "Please check your connection and try again, or email us directly.";
+            setTimeout(() => {
+              overlay.classList.remove('active');
+              if (submitBtn) submitBtn.disabled = false;
+            }, 4000);
           }
         });
     }
 
     function formSubmitComplete() {
       const submitBtn = document.getElementById('submitBtn');
-      const toast = document.getElementById('copyToast');
+      const overlay = document.getElementById('submitOverlay');
+      const modal = document.getElementById('submitModal');
+      const title = document.getElementById('submitModalTitle');
+      const desc = document.getElementById('submitModalDesc');
 
-      if (toast) {
-        toast.textContent = "Inquiry sent successfully to email!";
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 4000);
-      }
-
-      if (submitBtn) {
-        submitBtn.classList.remove('loading');
-        submitBtn.classList.add('success');
-        submitBtn.innerHTML = `
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <span>Inquiry Sent Successfully!</span>`;
-          
+      if (overlay) {
+        modal.classList.add('success');
+        title.textContent = "Inquiry Sent";
+        desc.textContent = "Thank you! Our lead director will respond within 24 hours.";
+        
         setTimeout(() => {
-          submitBtn.classList.remove('success');
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = `
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-              <span>Submit Inquiry</span>`;
+          overlay.classList.remove('active');
+          if (submitBtn) submitBtn.disabled = false;
+          document.getElementById('contactForm').reset();
         }, 3500);
       }
-
-      document.getElementById('contactForm').reset();
-      submitted = false;
     }
   </script>
 </body>

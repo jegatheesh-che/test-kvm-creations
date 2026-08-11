@@ -72,7 +72,7 @@
       align-items: center;
       justify-content: center;
       background: rgba(212, 175, 55, 0.1);
-      color: var(--gold);
+      color: var(--clr-gold);
       border: 1px solid rgba(212, 175, 55, 0.3);
       position: relative;
     }
@@ -80,7 +80,7 @@
       width: 32px;
       height: 32px;
       border: 3px solid rgba(212, 175, 55, 0.2);
-      border-top-color: var(--gold);
+      border-top-color: var(--clr-gold);
       border-radius: 50%;
       animation: submitSpin 1s linear infinite;
     }
@@ -96,18 +96,18 @@
       animation: scalePop 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
     .submit-modal.success .submit-modal-icon {
-      background: var(--gold);
-      color: var(--dark);
+      background: var(--clr-gold);
+      color: #ffffff;
     }
     .submit-modal-title {
-      font-family: 'Top Luxury', serif;
+      font-family: var(--font-serif);
       font-size: 1.8rem;
       margin-bottom: 12px;
-      color: var(--cream);
+      color: #ffffff;
     }
     .submit-modal-desc {
       font-size: 0.95rem;
-      color: var(--clr-muted);
+      color: rgba(255, 255, 255, 0.75);
       line-height: 1.5;
     }
     @keyframes submitSpin { 

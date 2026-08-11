@@ -3,8 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KVM Creations — Toronto, Canada</title>
-  <meta name="description" content="KVM Creations — capturing love stories, moments and emotions in Toronto, Canada." />
+  <title>KVM Creations — Toronto Wedding Photography & Cinematic Films</title>
+  <meta name="description" content="KVM Creations — luxury wedding photography and cinematic films by Mathu & Vithu in Toronto, Canada. Fine art visual storytelling for weddings, portraits, and engagement shoots." />
+  <link rel="canonical" href="https://kvmcreations.ca/home" />
+  <link rel="icon" href="assets/images/img1.webp" type="image/webp" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://unpkg.com" crossorigin />
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="KVM Creations — Toronto Wedding Photography & Cinematic Films" />
+  <meta property="og:description" content="Luxury wedding photography and cinematic films by Mathu & Vithu. Fine art visual storytelling in Toronto, Canada." />
+  <meta property="og:url" content="https://kvmcreations.ca/home" />
+  <meta property="og:image" content="https://kvmcreations.ca/assets/slide/kvm_creations_studio-116 (1).webp" />
+  <meta property="og:site_name" content="KVM Creations Studio" />
+  <meta property="og:locale" content="en_CA" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="KVM Creations — Toronto Wedding Photography" />
+  <meta name="twitter:description" content="Luxury wedding photography and cinematic films in Toronto, Canada." />
+  <meta name="twitter:image" content="https://kvmcreations.ca/assets/slide/kvm_creations_studio-116 (1).webp" />
+
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -74,12 +95,10 @@
 
     <!-- Bottom Overlay Content -->
     <div class="hero__content" style="position: absolute; bottom: 72px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 90vw;">
-      <span class="mask-reveal-wrap">
-        <span class="mask-reveal-inner" style="--delay: 0.1s; font-family: var(--font-serif); font-size: clamp(1.8rem, 3.5vw, 2.4rem); color: #ffffff; line-height: 1; text-transform: uppercase; text-shadow: 0 2px 6px rgba(0,0,0,0.5);">KVM</span>
-      </span>
-      <span class="mask-reveal-wrap">
-        <span class="mask-reveal-inner" style="--delay: 0.5s; font-family: var(--font-sans); font-size: clamp(0.8rem, 1.6vw, 1.0rem); color: #ffffff; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 2px 6px rgba(0,0,0,0.5);">Creation Studios</span>
-      </span>
+      <h1 class="mask-reveal-wrap" style="margin: 0; padding: 0;">
+        <span class="mask-reveal-inner" style="--delay: 0.1s; font-family: var(--font-serif); font-size: clamp(1.8rem, 3.5vw, 2.4rem); color: #ffffff; line-height: 1; text-transform: uppercase; text-shadow: 0 2px 6px rgba(0,0,0,0.5); display: block;">KVM</span>
+        <span class="mask-reveal-inner" style="--delay: 0.5s; font-family: var(--font-sans); font-size: clamp(0.8rem, 1.6vw, 1.0rem); color: #ffffff; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 2px 6px rgba(0,0,0,0.5); display: block; margin-top: 8px;">Creation Studios</span>
+      </h1>
     </div>
 
     <!-- Navigation Arrows -->
@@ -100,6 +119,8 @@
       <button class="hero__dot" aria-label="Slide 6"></button>
     </div>
   </section>
+
+  <main class="page-wrapper">
 
   <!-- ═══════════════════════════════════════ -->
   <!-- INTRO STATEMENT                        -->
@@ -169,8 +190,6 @@
         <div class="home-featured__item-label"><p>Golden Hour</p></div>
       </div>
 
-    </div>
-      </div>
     </div>
   </section>
 
@@ -362,8 +381,10 @@
         <span>WhatsApp</span>
       </a>
     </div>
-    <p class="footer__copy">&copy; 2025 KVM Creations</p>
+    <p class="footer__copy">&copy; <script>document.write(new Date().getFullYear())</script> KVM Creations</p>
   </footer>
+
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
@@ -445,8 +466,98 @@
     </a>
   </div>
 
+  <!-- JSON-LD Structured Data for SEO/AEO/GEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "Photographer"],
+    "name": "KVM Creations Studio",
+    "alternateName": "KVM Creation Studios",
+    "description": "Toronto-based luxury wedding photography and cinematography studio led by Mathu & Vithu. Specializing in fine art weddings, engagement shoots, editorial portraits, and cinematic wedding films across Canada.",
+    "url": "https://kvmcreations.ca",
+    "telephone": "+14372338460",
+    "email": "kvmcreations@gmail.com",
+    "foundingDate": "2017",
+    "numberOfEmployees": "2",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Toronto",
+      "addressRegion": "Ontario",
+      "addressCountry": "CA"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 43.6532,
+      "longitude": -79.3832
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Toronto" },
+      { "@type": "State", "name": "Ontario" },
+      { "@type": "Country", "name": "Canada" }
+    ],
+    "sameAs": [
+      "https://www.instagram.com/kvmcreationsstudio.ca",
+      "https://www.tiktok.com/@kvmcreationsstudio.ca"
+    ],
+    "priceRange": "$$$$",
+    "image": "https://kvmcreations.ca/assets/about/about.webp",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "4",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Priya & Aarav" },
+        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+        "reviewBody": "Mathu & Vithu were absolute dreams to work with! KVM Creations captured every emotion and detail of our wedding day so beautifully."
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Kavya & Rohan" },
+        "reviewRating": { "@type": "Rating", "ratingValue": "5" },
+        "reviewBody": "The cinematic wedding film literally brought our entire family to tears! The colors, editing, and audio design were breathtaking."
+      }
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Photography & Cinematography Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Wedding Photography & Cinematography",
+            "description": "Full-day documentary coverage of your ceremony — candid emotions, quiet rituals, and every stolen glance between you."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Engagement Shoot Sessions",
+            "description": "Intimate editorial shoots built around your story — a location, a feeling, a mood. No posing scripts. Just real connection."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Fine Art Portraits",
+            "description": "Single-subject or family portraits crafted with fine-art sensibility — light, stillness, and the complexity within simplicity."
+          }
+        }
+      ]
+    }
+  }
+  </script>
+
 </body>
 </html>
+
 
 
 

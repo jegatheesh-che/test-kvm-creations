@@ -7,6 +7,7 @@
   src: url('../assets/fonts/Cardival Demo.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -14,6 +15,7 @@
   src: url('../assets/fonts/TOPLUXURY.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* --- DESIGN TOKENS --- */
@@ -26,7 +28,9 @@
   --clr-gold-light: #bd9b52;
   --clr-gold-dark:  #6b5220;
   --clr-white:      #1a1814;
+  --clr-fg:          #1a1814;
   --clr-muted:      #3b3632;
+  --clr-fg-muted:   #3b3632;
   --clr-border:     #e0dbd4;
   --font-serif:     'Top Luxury', serif;
   --font-sans:      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -3190,4 +3194,38 @@ html, body {
   }
 }
 
+/* ===== SCROLL REVEAL ANIMATIONS ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.reveal-delay-1 { transition-delay: 0.12s; }
+.reveal.reveal-delay-2 { transition-delay: 0.24s; }
+.reveal.reveal-delay-3 { transition-delay: 0.36s; }
+.reveal.reveal-delay-4 { transition-delay: 0.48s; }
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== FOOTER QUOTE FADE ===== */
+.footer__quote {
+  transition: opacity 0.8s ease;
+}
+.footer__quote.fade-out {
+  opacity: 0;
+}
+
+/* ===== REVIEW CARD STYLES (reviews page) ===== */
+.review-card {
+  transition: transform 0.4s var(--ease-expo), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 168, 76, 0.35) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
 

@@ -130,11 +130,19 @@ if (window.matchMedia('(pointer: fine)').matches) {
 }
 
 // -----------------------------------------------
-// INSTANT REVEAL (NO SLOW FADE-IN DELAY)
+// SCROLL REVEAL — IntersectionObserver based
 // -----------------------------------------------
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
 document.querySelectorAll('.reveal').forEach(el => {
-  el.style.opacity = '1';
-  el.style.transform = 'none';
+  revealObserver.observe(el);
 });
 
 
@@ -237,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quoteAuthor.textContent = quotes[currentIdx].author;
         quoteBox.classList.remove('fade-out');
       }, 800);
-    }, 3500);
+    }, 9000);
   }
 });
 
@@ -265,7 +273,7 @@ function initHeroSlider() {
   if (slides.length <= 1) return;
 
   let currentIndex = 0;
-  const INTERVAL_MS = 2000;
+  const INTERVAL_MS = 5500;
 
   // Initial slide setup with image zoom-out
   slides.forEach((slide, idx) => {

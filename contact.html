@@ -93,15 +93,7 @@
           <h2 class="form-card__title">Reserve Your Date</h2>
           <p class="form-card__desc">Fill in your details and our lead director will respond within 24 hours.</p>
 
-          <!-- HIDDEN IFRAME FOR SILENT SUBMISSION -->
-          <script>var submitted = false;</script>
-          <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { formSubmitComplete(); }"></iframe>
-
-          <form id="contactForm" action="https://formsubmit.co/mathusanm505@gmail.com" method="POST" target="hidden_iframe" onsubmit="submitted=true; handleInquirySubmit(event);">
-            
-            <input type="hidden" name="_subject" value="New Inquiry - KVM Creations">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
+          <form id="contactForm" onsubmit="handleInquirySubmit(event);">
 
             <!-- SERVICES CHECKBOXES -->
             <div class="form-group">
@@ -319,6 +311,15 @@
     </a>
   </div>
 
+  <!-- EMAILJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function() {
+      // EmailJS Initialization
+      emailjs.init("EpJMirt7CopQtnAR1");
+    })();
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
@@ -326,6 +327,8 @@
 
   <script>
     function handleInquirySubmit(event) {
+      event.preventDefault(); // Prevent default browser submission
+      
       const submitBtn = document.getElementById('submitBtn');
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -340,9 +343,32 @@
 
       const toast = document.getElementById('copyToast');
       if (toast) {
-        toast.textContent = "Sending inquiry to mathusanm505@gmail.com...";
+        toast.textContent = "Sending inquiry securely...";
         toast.classList.add('show');
       }
+
+      // TODO: Replace with your actual Service ID and Template ID
+      emailjs.sendForm('service_1x2za0m', 'template_gs3tjzq', event.target)
+        .then(() => {
+          formSubmitComplete();
+        }, (error) => {
+          console.error('EmailJS Error:', error);
+          if (toast) {
+            toast.textContent = "Failed to send inquiry. Please check your EmailJS keys.";
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            submitBtn.innerHTML = `
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+              <span>Submit Inquiry</span>`;
+          }
+        });
     }
 
     function formSubmitComplete() {

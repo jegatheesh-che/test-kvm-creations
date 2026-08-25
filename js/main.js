@@ -3,13 +3,13 @@
    GSAP + Lenis + vanilla scroll reveal + cursor
    ================================================ */
 
-// --- Lenis physics smooth scroll (Master Agency Tuning) ---
+// --- Lenis physics smooth scroll ---
 const lenis = new Lenis({
-  duration: 1.4,
+  duration: 1.1,
   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
   smoothWheel: true,
-  wheelMultiplier: 0.95,
-  touchMultiplier: 1.5,
+  wheelMultiplier: 1.1,
+  touchMultiplier: 1.8,
   orientation: 'vertical',
   gestureOrientation: 'vertical'
 });

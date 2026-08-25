@@ -33,10 +33,10 @@ Actions Taken:
 --------------------------------------------------------------------------------
 
 [2026-07-28 18:15:26 IST]
-User Prompt: Discussion on KVM Creations Admin Panel architecture with separate Cloudinary & Firebase APIs like Project 1
+User Prompt: Discussion on KVM Creations Studio Admin Panel architecture with separate Cloudinary & Firebase APIs like Project 1
 Actions Taken:
 - Analyzed Project 1 admin structure (/admin, Cloudinary upload/deletion API, Firebase Firestore/Auth).
-- Outlined user's plan and provided architecture recommendations for KVM Creations test admin panel.
+- Outlined user's plan and provided architecture recommendations for KVM Creations Studio test admin panel.
 - Logged discussion to process.txt.
 
 --------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ Actions Taken:
 --------------------------------------------------------------------------------
 
 [2026-07-28 18:31:15 IST]
-User Prompt: Sync exact Admin Panel UI, styling, and JavaScript logic from Project 1 into KVM Creations
+User Prompt: Sync exact Admin Panel UI, styling, and JavaScript logic from Project 1 into KVM Creations Studio
 Actions Taken:
 - Copied exact Admin Panel files (HTML, CSS, JS) from Project 1 (/admin panel/project 1/admin) into kvm creations - test admin.
 - Updated Cloudinary configuration in admin-gallery.js to Cloud Name vfcl8vef and Upload Preset kvm_creations_gallery.
@@ -127,17 +127,17 @@ Actions Taken:
 --------------------------------------------------------------------------------
 
 [2026-07-28 18:43:46 IST]
-User Prompt: Import images, reviews, and about section story content from KVM Creations website into Admin Panel seed data
+User Prompt: Import images, reviews, and about section story content from KVM Creations Studio website into Admin Panel seed data
 Actions Taken:
-- Added 27 KVM Creations portfolio images and titles into DEFAULT_SEED_GALLERY in admin/js/admin-gallery.js.
+- Added 27 KVM Creations Studio portfolio images and titles into DEFAULT_SEED_GALLERY in admin/js/admin-gallery.js.
 - Added "+ Import KVM Portfolio Photos (27 Items)" button to populate database with project images.
-- Updated DEFAULT_SEED_REVIEWS in admin/js/admin-reviews.js to KVM Creations client reviews and quotes.
+- Updated DEFAULT_SEED_REVIEWS in admin/js/admin-reviews.js to KVM Creations Studio client reviews and quotes.
 - Updated DEFAULT_SECTIONS in admin/js/admin-about.js with Mathu & Vithu bios and photos (about.webp, mathu.webp, vithu.webp).
 
 --------------------------------------------------------------------------------
 
 [2026-07-28 18:47:25 IST]
-User Prompt: Build dedicated Reviews page UI (reviews.html) and dynamic Firestore backend (js/reviews.js) for KVM Creations
+User Prompt: Build dedicated Reviews page UI (reviews.html) and dynamic Firestore backend (js/reviews.js) for KVM Creations Studio
 Actions Taken:
 - Created reviews.html with luxury dark mode glassmorphism UI, client review cards, star ratings, and verified badges.
 - Created js/reviews.js to connect to kvm-creation-studio Firestore and dynamically render reviews added from the Admin Panel.
@@ -156,7 +156,7 @@ Actions Taken:
 [2026-07-28 18:52:36 IST]
 User Prompt: Implement About page alignment and dynamic Firestore sync between Admin Dashboard and live website
 Actions Taken:
-- Updated admin/js/admin-about.js with KVM Creations Mathu & Vithu sections and image slots (assets/about/about.webp, mathu.webp, vithu.webp).
+- Updated admin/js/admin-about.js with KVM Creations Studio Mathu & Vithu sections and image slots (assets/about/about.webp, mathu.webp, vithu.webp).
 - Created js/about-renderer.js to dynamically hydrate about.html from Firestore /about collection in real-time.
 - Updated about.html to include js/about-renderer.js script import.
 

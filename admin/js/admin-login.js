@@ -16,7 +16,7 @@ onAuthStateChanged(auth, async (user) => {
       window.location.href = "/admin/index.html";
     } else {
       await signOut(auth);
-      showError("Access Denied: You do not have administrative privileges for KVM Creations.");
+      showError("Access Denied: You do not have administrative privileges for KVM Creations Studio.");
     }
   }
 });
@@ -70,7 +70,7 @@ if (loginForm) {
       } else {
         await signOut(auth);
         setLoading(false);
-        showError("Access Denied: You do not have administrative privileges for KVM Creations.");
+        showError("Access Denied: You do not have administrative privileges for KVM Creations Studio.");
       }
     } catch (error) {
       console.warn("[Auth Notice] Login attempt rejected:", error.code);

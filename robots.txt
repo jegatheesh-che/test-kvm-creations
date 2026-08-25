@@ -1,9 +1,9 @@
-# KVM Creations — Robots.txt
+# KVM Creations Studio — Robots.txt
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://kvmcreations.ca/sitemap.xml
+Sitemap: https://www.kvmcreationsstudio.ca/sitemap.xml
 
 # Disallow admin and API routes
 Disallow: /admin/

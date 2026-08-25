@@ -1,5 +1,5 @@
 // ================================================
-// KVM Creations — Firebase Configuration Module
+// KVM Creations Studio — Firebase Configuration Module
 // ================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";

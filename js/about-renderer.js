@@ -77,7 +77,7 @@ async function loadDynamicAboutContent() {
             
             <div class="hero__image-col reveal">
               <div class="hero__image-wrapper">
-                <img src="${sec.imageUrl || ''}" alt="${sec.eyebrow || 'About KVM Creations'}" class="hero__image" loading="eager" />
+                <img src="${sec.imageUrl || ''}" alt="${sec.eyebrow || 'About KVM Creations Studio'}" class="hero__image" loading="eager" />
               </div>
             </div>
           </section>

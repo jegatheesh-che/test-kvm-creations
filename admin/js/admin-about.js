@@ -7,7 +7,7 @@ import { auth, db } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Cloudinary Configuration (KVM Creations)
+// Cloudinary Configuration (KVM Creations Studio)
 const CLOUD_NAME = "vfcl8vef";
 const UPLOAD_PRESET = "kvm_creations_gallery";
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
@@ -35,13 +35,13 @@ const sectionCounter = document.getElementById("adminAboutSectionCounter");
 // State: List of About Page Sections (Max 10)
 let sectionsList = [];
 
-// KVM Creations Mathu & Vithu Default Initial Sections
+// KVM Creations Studio Mathu & Vithu Default Initial Sections
 const DEFAULT_SECTIONS = [
   {
     id: "sec_hero",
     eyebrow: "Visual Storytellers & Cinematographers",
-    title: "About KVM Creations",
-    desc: "We are Mathu & Vithu, wedding photographers and cinematographers at KVM Creations with a passion for telling love stories through timeless visuals.\n\nTogether, we bring photography and wedding cinematography under one roof—preserving every celebration through both heartfelt images and cinematic films that reflect each couple’s story in an authentic, genuine way.\n\nWhether we’re behind the camera capturing candid smiles, quiet glances, or crafting cinematic wedding films, we focus on documenting genuine emotions, beautiful details, and unforgettable memories that can be relived for generations.",
+    title: "About KVM Creations Studio",
+    desc: "We are Mathu & Vithu, wedding photographers and cinematographers at KVM Creations Studio with a passion for telling love stories through timeless visuals.\n\nTogether, we bring photography and wedding cinematography under one roof—preserving every celebration through both heartfelt images and cinematic films that reflect each couple’s story in an authentic, genuine way.\n\nWhether we’re behind the camera capturing candid smiles, quiet glances, or crafting cinematic wedding films, we focus on documenting genuine emotions, beautiful details, and unforgettable memories that can be relived for generations.",
     imageUrl: "/assets/about/about.webp"
   },
   {

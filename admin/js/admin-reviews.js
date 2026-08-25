@@ -7,7 +7,7 @@ import { auth, db } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Cloudinary Configuration (KVM Creations)
+// Cloudinary Configuration (KVM Creations Studio)
 const CLOUD_NAME = "vfcl8vef";
 const UPLOAD_PRESET = "kvm_creations_gallery";
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
@@ -71,7 +71,7 @@ const DEFAULT_SEED_REVIEWS = [
     subtitle: "Toronto, Canada • Wedding & Film",
     stars: 5,
     category: "wedding",
-    text: "Mathu & Vithu were absolute dreams to work with! From the morning prep to the late-night dance floor, KVM Creations captured every emotion and detail of our wedding day so beautifully.",
+    text: "Mathu & Vithu were absolute dreams to work with! From the morning prep to the late-night dance floor, KVM Creations Studio captured every emotion and detail of our wedding day so beautifully.",
     badge: "Verified Couple",
     avatarUrl: "/assets/images/img1.webp",
     order: 1
@@ -81,7 +81,7 @@ const DEFAULT_SEED_REVIEWS = [
     subtitle: "Vancouver, BC • Destination Wedding",
     stars: 5,
     category: "wedding",
-    text: "The cinematic wedding film literally brought our entire family to tears! The colors, editing, and audio design were breathtaking. KVM Creations is truly unmatched.",
+    text: "The cinematic wedding film literally brought our entire family to tears! The colors, editing, and audio design were breathtaking. KVM Creations Studio is truly unmatched.",
     badge: "Verified Film Client",
     avatarUrl: "/assets/images/img3.webp",
     order: 2

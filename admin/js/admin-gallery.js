@@ -6,7 +6,7 @@ import { auth, db } from "/js/firebase-config.js?v=2";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Cloudinary Configuration (KVM Creations)
+// Cloudinary Configuration (KVM Creations Studio)
 const CLOUD_NAME = "vfcl8vef";
 const UPLOAD_PRESET = "kvm_creations_gallery";
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
@@ -131,7 +131,7 @@ async function seedDefaultGallery() {
     }
     await loadGalleryItems();
     if (window.showAppPopup) {
-      window.showAppPopup("Gallery Seeded", "🎉 Successfully imported 27 KVM Creations portfolio items into database!", "success");
+      window.showAppPopup("Gallery Seeded", "🎉 Successfully imported 27 KVM Creations Studio portfolio items into database!", "success");
     }
   } catch (err) {
     console.error("[Admin Gallery] Seed Error:", err);
@@ -144,7 +144,7 @@ async function seedDefaultGallery() {
       loadingState.style.display = "none";
       emptyState.style.display = "block";
       emptyState.innerHTML = `
-        <p>No gallery items found in KVM Creations database.</p>
+        <p>No gallery items found in KVM Creations Studio database.</p>
         <button type="button" id="btnSeedGallery" class="btn-primary" style="margin-top: 14px;">+ Import KVM Portfolio Photos (27 Items)</button>
       `;
       const btnSeed = document.getElementById("btnSeedGallery");

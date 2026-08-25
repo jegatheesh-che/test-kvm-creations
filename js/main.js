@@ -1,5 +1,5 @@
 /* ================================================
-   KVM Creations — main.js
+   KVM Creations Studio — main.js
    GSAP + Lenis + vanilla scroll reveal + cursor
    ================================================ */
 

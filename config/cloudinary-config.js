@@ -1,5 +1,5 @@
 // ================================================
-// KVM Creations — Public Cloudinary Configuration
+// KVM Creations Studio — Public Cloudinary Configuration
 // Project 2 Cloudinary Instance
 // ================================================
 

@@ -1,5 +1,5 @@
 // ================================================
-// KVM Creations — Cloudinary Upload Service
+// KVM Creations Studio — Cloudinary Upload Service
 // Project 2 Unsigned Image Upload Handler
 // ================================================
 

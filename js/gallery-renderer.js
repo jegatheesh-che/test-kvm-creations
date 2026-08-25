@@ -50,11 +50,16 @@ async function loadDynamicGallery() {
       const category = (item.category || "uncategorized").toLowerCase().trim();
       card.setAttribute("data-category", category);
       
-      const isVideo = item.mediaType === "video" || !!item.youtubeId;
+      const isVideo = item.mediaType === "video" || !!item.vimeoId || !!item.youtubeId;
       let imgUrl = "";
       let fullResUrl = "";
 
-      if (isVideo && item.youtubeId) {
+      if (isVideo && item.vimeoId) {
+        imgUrl = `https://vumbnail.com/${item.vimeoId}.jpg`;
+        fullResUrl = item.vimeoId;
+        card.setAttribute("data-media-type", "video");
+        card.setAttribute("data-vimeo-id", item.vimeoId);
+      } else if (isVideo && item.youtubeId) {
         imgUrl = `https://img.youtube.com/vi/${item.youtubeId}/maxresdefault.jpg`;
         fullResUrl = item.youtubeId;
         card.setAttribute("data-media-type", "video");

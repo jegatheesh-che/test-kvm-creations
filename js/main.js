@@ -568,15 +568,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawCat = card.getAttribute('data-category') || 'Portfolio';
       const cat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
       
-      const isVideo = card.getAttribute('data-media-type') === 'video' || !!card.getAttribute('data-youtube-id');
+      const vimeoId = card.getAttribute('data-vimeo-id');
       const youtubeId = card.getAttribute('data-youtube-id');
+      const isVideo = card.getAttribute('data-media-type') === 'video' || !!vimeoId || !!youtubeId;
       const fullResUrl = card.getAttribute('data-full') || (img ? img.src : '');
 
-      if (isVideo && youtubeId) {
+      if (isVideo && (vimeoId || youtubeId)) {
         if (lightboxImg) lightboxImg.style.display = 'none';
         if (lightboxVideo) {
           lightboxVideo.style.display = 'block';
-          lightboxVideo.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+          if (vimeoId) {
+            lightboxVideo.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0`;
+          } else {
+            lightboxVideo.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+          }
         }
       } else {
         if (lightboxVideo) {

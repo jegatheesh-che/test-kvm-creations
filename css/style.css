@@ -2071,7 +2071,6 @@ button { cursor: pointer; border: none; background: none; transition: transform 
   overflow: hidden;
   background: rgba(18, 18, 15, 0.85);
   border: none;
-  backdrop-filter: blur(8px);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
   cursor: pointer;
   transition: opacity 0.4s ease, box-shadow 0.4s ease;
@@ -2104,6 +2103,7 @@ button { cursor: pointer; border: none; background: none; transition: transform 
   display: block;
   object-fit: contain;
   border-radius: 0;
+}
 /* Removed autoZoomOut animation from every gallery card — GSAP already handles entry animation */
 /* Filter only applies on hover (compositing-friendly) */
 .gallery-card img {

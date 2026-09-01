@@ -16,7 +16,7 @@
   <meta property="og:title" content="KVM Creations Studio — Luxury Wedding Photography & Films | Toronto" />
   <meta property="og:description" content="Fine art wedding photography and cinematic films by Mathu & Vithu in Toronto, Canada. Capturing love stories with timeless elegance." />
   <meta property="og:url" content="https://www.kvmcreationsstudio.ca/" />
-  <meta property="og:image" content="https://www.kvmcreationsstudio.ca/assets/slide/kvm_creations_studio-116 (1).webp" />
+  <meta property="og:image" content="https://www.kvmcreationsstudio.ca/assets/images/img1.webp" />
   <meta property="og:site_name" content="KVM Creations Studio" />
   <meta property="og:locale" content="en_CA" />
 
@@ -24,7 +24,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="KVM Creations Studio — Luxury Wedding Photography & Films" />
   <meta name="twitter:description" content="Fine art wedding photography and cinematic films in Toronto, Canada." />
-  <meta name="twitter:image" content="https://www.kvmcreationsstudio.ca/assets/slide/kvm_creations_studio-116 (1).webp" />
+  <meta name="twitter:image" content="https://www.kvmcreationsstudio.ca/assets/images/img1.webp" />
 
   <style>
     @font-face { font-family: 'Top Luxury'; src: url('assets/fonts/TOPLUXURY.otf') format('opentype'); font-display: swap; }
@@ -444,14 +444,7 @@
       );
 
       // ─── Step 4: Pro High-Performance Continuous Slideshow for Mosaic Cells ───
-      const PHOTO_POOL = [
-        'img1.webp', 'img2.webp', 'img3.webp', 'img4.webp', 'img5.webp',
-        'img6.webp', 'img7.webp', 'img8.webp', 'img9.webp', 'img10.webp',
-        'img11.webp', 'img12.webp', 'img13.webp', 'img14.webp', 'img15.webp',
-        'img16.webp', 'img17.webp', 'img18.webp', 'img19.webp', 'img20.webp',
-        'img21.webp', 'img22.webp', 'img23.webp', 'img24.webp', 'img25.webp',
-        'img28.webp', 'img30.webp', 'img31.webp'
-      ];
+      const PHOTO_POOL = Array.from({ length: 75 }, (_, i) => `img${i + 1}.webp`);
 
       // Preload image pool in background for instant, zero-delay swaps
       PHOTO_POOL.forEach(name => {

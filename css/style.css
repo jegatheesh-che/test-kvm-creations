@@ -1781,6 +1781,10 @@ button { cursor: pointer; border: none; background: none; transition: transform 
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle at center, rgba(149, 117, 49, 0.08) 0%, transparent 70%);
+  /* will-change promotes this element to its own compositor layer,
+     so the 8s floating animation runs entirely on the GPU compositor thread
+     without triggering main-thread repaints. */
+  will-change: transform;
   animation: heroFloat 8s ease-in-out infinite alternate;
 }
 
@@ -1805,8 +1809,10 @@ button { cursor: pointer; border: none; background: none; transition: transform 
   height: 100%;
   object-fit: cover;
   display: block;
+  /* will-change is now scoped to the animation keyframe duration only.
+     Always-on will-change was promoting 3 textures at load time
+     while the browser was simultaneously decoding gallery images. */
   animation: autoZoomOut 7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform;
 }
 
 .collage-item--main {
@@ -3199,22 +3205,14 @@ html, body {
   }
 }
 
-/* ===== SCROLL REVEAL ANIMATIONS ===== */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal.reveal-delay-1 { transition-delay: 0.12s; }
-.reveal.reveal-delay-2 { transition-delay: 0.24s; }
-.reveal.reveal-delay-3 { transition-delay: 0.36s; }
-.reveal.reveal-delay-4 { transition-delay: 0.48s; }
-
-.reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
+/* ===== SCROLL REVEAL ANIMATIONS =====
+   NOTE: The .reveal { opacity:1 !important } block at line 1244 is the ACTIVE
+   rule for this site — it shows elements immediately (performance preference).
+   The reveal/revealed animation below is intentionally disabled by that override.
+   Kept for reference only. If you want to re-enable scroll-reveal animations,
+   remove the !important block at line 1244.
+*/
+/* .reveal { opacity: 0; transform: translateY(28px); ... } — disabled, see note above */
 
 /* ===== FOOTER QUOTE FADE ===== */
 .footer__quote {

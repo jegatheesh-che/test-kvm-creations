@@ -95,12 +95,12 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scale(1.15);
+      transform: scale(1.08);
       filter: brightness(0.85) saturate(1.1);
       opacity: 0;
-      transition: opacity 1.2s ease-in-out,
-                  transform 6.5s cubic-bezier(0.16, 1, 0.3, 1),
-                  filter 0.6s ease;
+      transition: opacity 1.0s cubic-bezier(0.25, 1, 0.5, 1),
+                  transform 4.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.5s ease;
       will-change: transform, opacity;
     }
 
@@ -347,7 +347,7 @@
       <span class="brand-label" id="brandLabel"><span class="brand-label-inner">Photography &amp; Cinematography</span></span>
       <h1 class="brand-name" id="brandName">
         KVM
-        <em>Creation Studios</em>
+        <em>Creations Studio</em>
       </h1>
       <div class="brand-line" id="brandLine"></div>
       <a href="home.html" class="enter-btn" id="enterBtn">
@@ -443,41 +443,70 @@
         textStart + 0.7
       );
 
-      // ─── Step 4: Continuous Medium-Speed Image Rotation for Mosaic Cells ───
+      // ─── Step 4: Pro High-Performance Continuous Slideshow for Mosaic Cells ───
+      const PHOTO_POOL = [
+        'img1.webp', 'img2.webp', 'img3.webp', 'img4.webp', 'img5.webp',
+        'img6.webp', 'img7.webp', 'img8.webp', 'img9.webp', 'img10.webp',
+        'img11.webp', 'img12.webp', 'img13.webp', 'img14.webp', 'img15.webp',
+        'img16.webp', 'img17.webp', 'img18.webp', 'img19.webp', 'img20.webp',
+        'img21.webp', 'img22.webp', 'img23.webp', 'img24.webp', 'img25.webp',
+        'img28.webp', 'img30.webp', 'img31.webp'
+      ];
+
+      // Preload image pool in background for instant, zero-delay swaps
+      PHOTO_POOL.forEach(name => {
+        const p = new Image();
+        p.src = `assets/images/${name}`;
+      });
+
       cells.forEach((cell, idx) => {
-        const interval = 3500; // Medium speed (~3.5s per image swap)
-        let imgNum = (idx * 4 + 7) % 57 + 1;
+        const interval = 2800; // Smooth, energetic cadence (~2.8s per slide change)
+        let poolIndex = (idx * 3 + 5) % PHOTO_POOL.length;
 
-        // Slight micro-offset (150ms step) so all grid cells cascade nicely without delay
-        setTimeout(() => {
-          setInterval(() => {
-            imgNum = (imgNum % 57) + 1;
-            const newImg = document.createElement('img');
-            newImg.alt = "KVM Showcase";
-            
-            newImg.onload = () => {
-              const shutter = cell.querySelector('.iris-shutter');
-              if (shutter) {
-                cell.insertBefore(newImg, shutter);
-              } else {
-                cell.appendChild(newImg);
-              }
-              
-              void newImg.offsetWidth; // Force reflow
+        function swapImage() {
+          poolIndex = (poolIndex + 1) % PHOTO_POOL.length;
+          const imgName = PHOTO_POOL[poolIndex];
+
+          const newImg = document.createElement('img');
+          newImg.alt = "KVM Creations Studio";
+          newImg.loading = "eager";
+          newImg.decoding = "async";
+
+          function onReady() {
+            const shutter = cell.querySelector('.iris-shutter');
+            if (shutter) {
+              cell.insertBefore(newImg, shutter);
+            } else {
+              cell.appendChild(newImg);
+            }
+
+            // Trigger CSS transition via requestAnimationFrame
+            requestAnimationFrame(() => {
               newImg.classList.add('active');
+            });
 
-              // After 1.2s crossfade transition, remove older images
-              setTimeout(() => {
-                const allImgs = cell.querySelectorAll('img');
-                allImgs.forEach(img => {
-                  if (img !== newImg) img.remove();
-                });
-              }, 1200);
-            };
+            // Clean up previous images after crossfade completes
+            setTimeout(() => {
+              const oldImgs = cell.querySelectorAll('img');
+              oldImgs.forEach(img => {
+                if (img !== newImg) img.remove();
+              });
+            }, 1100);
+          }
 
-            newImg.src = `assets/images/img${imgNum}.webp`;
-          }, interval);
-        }, idx * 150);
+          newImg.onload = onReady;
+          newImg.onerror = () => {
+            // Safety fallback: if load fails, try next image without stalling
+            swapImage();
+          };
+
+          newImg.src = `assets/images/${imgName}`;
+        }
+
+        // Stagger initial starts across cells for an organic, cinematic visual wave
+        setTimeout(() => {
+          setInterval(swapImage, interval);
+        }, 1200 + (idx * 220));
       });
 
     });

@@ -199,16 +199,8 @@ document.querySelectorAll('.nav__link[href]').forEach(link => {
 });
 
 // --- SHINY HOVER WRAPPER (initial static DOM) ---
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('img:not(.nav__logo-img, .cursor__img, .home-about__logo, .video-badge img, .round-badge img)').forEach(el => {
-    if (el.closest('.hero__slide')) return;
-    if (el.closest('.shiny-wrapper')) return; // already wrapped — skip
-    const wrapper = document.createElement('div');
-    wrapper.className = 'shiny-wrapper';
-    el.parentNode.insertBefore(wrapper, el);
-    wrapper.appendChild(el);
-  });
-});
+// Removed per user request to eliminate lag and shining effect
+
 
 // --- ROUND BADGE IMAGE CROSSFADE ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -530,20 +522,7 @@ function bindGalleryFilters() {
 // When newCards is provided, only processes those specific elements (incremental).
 // When called with no args, falls back to scanning the full DOM (legacy path).
 window.reinitGalleryUI = function(newCards) {
-  // 1. Wrap images in shiny-wrapper — only for new/unwrapped elements
-  const scope = (newCards && newCards.length > 0)
-    ? newCards  // incremental: only new cards
-    : Array.from(document.querySelectorAll('.gallery-card, .collage-item')); // full scan fallback
-
-  scope.forEach(card => {
-    const img = card.querySelector('img');
-    if (!img) return;
-    if (img.closest('.shiny-wrapper')) return; // already wrapped
-    const wrapper = document.createElement('div');
-    wrapper.className = 'shiny-wrapper';
-    img.parentNode.insertBefore(wrapper, img);
-    wrapper.appendChild(img);
-  });
+  // Shiny wrapper logic removed per user request to improve performance
 
   // 2. Register new cards with the reveal observer
   if (newCards && newCards.length > 0) {

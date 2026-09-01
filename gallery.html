@@ -30,6 +30,21 @@
   <link rel="stylesheet" href="css/style.css?v=4" />
 </head>
 <body>
+  <div class="global-preloader" id="globalPreloader">
+    <div class="loader-brand">KVM</div>
+    <div class="loader-line"></div>
+  </div>
+  <script>
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('globalPreloader');
+      if(loader) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 800); }
+    });
+    // On gallery page, wait slightly longer for masonry images if needed, but cap at 2s so it doesn't freeze.
+    setTimeout(() => {
+      const loader = document.getElementById('globalPreloader');
+      if(loader && !loader.classList.contains('hidden')) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 800); }
+    }, 2000);
+  </script>
   
   <div class="bg-wallpaper">
     <div class="bg-wallpaper__inner"></div>

@@ -321,6 +321,20 @@
   </style>
 </head>
 <body>
+  <div class="global-preloader" id="globalPreloader">
+    <div class="loader-brand">KVM</div>
+    <div class="loader-line"></div>
+  </div>
+  <script>
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('globalPreloader');
+      if(loader) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 800); }
+    });
+    setTimeout(() => {
+      const loader = document.getElementById('globalPreloader');
+      if(loader && !loader.classList.contains('hidden')) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 800); }
+    }, 2000);
+  </script>
 
   <div class="landing">
 

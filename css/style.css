@@ -3232,3 +3232,46 @@ html, body {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
+
+/* --- NEW PREMIUM PRELOADER --- */
+.global-preloader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100dvh;
+  background-color: var(--dark, #0a0a08);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: all;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+.global-preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.loader-brand {
+  font-family: 'Top Luxury', serif;
+  font-size: 3rem;
+  color: var(--gold, #d4af37);
+  letter-spacing: 4px;
+  animation: pulse 1.5s infinite alternate;
+}
+.loader-line {
+  width: 0;
+  height: 1px;
+  background-color: var(--gold, #d4af37);
+  margin-top: 16px;
+  animation: drawLine 1.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+@keyframes pulse {
+  0% { opacity: 0.6; filter: blur(2px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+@keyframes drawLine {
+  0% { width: 0; opacity: 0; }
+  50% { width: 80px; opacity: 1; }
+  100% { width: 0; opacity: 0; }
+}

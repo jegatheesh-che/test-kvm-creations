@@ -99,7 +99,7 @@ async function loadDynamicGallery() {
       card.innerHTML = `
         <img src="${imgUrl}" alt="${category}" loading="lazy" decoding="async" />
         <div class="gallery-card__expand">&#10530;</div>
-        ${isVideo ? '<div class="video-badge" style="position:absolute;top:12px;right:12px;background:rgba(10,10,8,0.85);backdrop-filter:blur(8px);color:#bd9b52;border:1px solid rgba(189,155,82,0.3);padding:5px 12px;border-radius:20px;font-size:11px;letter-spacing:1px;text-transform:uppercase;z-index:2;pointer-events:none;">▶ Video</div>' : ""}
+        ${isVideo ? '<div class="gallery-video-badge" style="position:absolute;top:12px;right:12px;background:rgba(10,10,8,0.85);backdrop-filter:blur(8px);color:#bd9b52;border:1px solid rgba(189,155,82,0.3);padding:5px 12px;border-radius:20px;font-size:11px;letter-spacing:1px;text-transform:uppercase;z-index:2;pointer-events:none;">▶ Video</div>' : ""}
       `;
 
       fragment.appendChild(card);

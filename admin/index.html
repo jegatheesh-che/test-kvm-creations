@@ -201,7 +201,7 @@
           <label for="galleryMediaType">Media Type *</label>
           <select id="galleryMediaType" required class="admin-select">
             <option value="image" selected>Image</option>
-            <option value="video">Video (Vimeo)</option>
+            <option value="video">Video (Vimeo / YouTube)</option>
           </select>
         </div>
 
@@ -235,9 +235,9 @@
         </div>
 
         <div class="form-group" id="groupVimeoId" style="display: none;">
-          <label for="galleryVimeoId">Vimeo ID or Link *</label>
-          <input type="text" id="galleryVimeoId" placeholder="e.g., https://vimeo.com/76979871 or 76979871" />
-          <p class="admin-modal__hint">Paste Vimeo video link or the numeric video ID.</p>
+          <label for="galleryVimeoId">Video Link or ID *</label>
+          <input type="text" id="galleryVimeoId" placeholder="e.g., https://youtu.be/xxx or https://vimeo.com/xxx" />
+          <p class="admin-modal__hint">Paste Vimeo or YouTube video link, or the video ID.</p>
         </div>
 
         <div id="galleryFormError" class="auth-error-msg" style="display: none; margin-top: 10px;"></div>

@@ -198,6 +198,19 @@ function extractVimeoId(input) {
   return null;
 }
 
+function extractYoutubeId(input) {
+  if (!input) return null;
+  input = String(input).trim();
+  const match = input.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+  if (match && match[1]) {
+    return match[1];
+  }
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
+    return input;
+  }
+  return null;
+}
+
 function createAdminGalleryCard(item, index = 0) {
   const card = document.createElement("div");
   card.className = "admin-gallery-item animate-in";
@@ -212,6 +225,8 @@ function createAdminGalleryCard(item, index = 0) {
   if (isVideo && item.vimeoId) {
     const cleanVimeoId = extractVimeoId(item.vimeoId);
     thumbUrl = `https://vumbnail.com/${cleanVimeoId}.jpg`;
+  } else if (isVideo && item.youtubeId) {
+    thumbUrl = `https://img.youtube.com/vi/${item.youtubeId}/maxresdefault.jpg`;
   } else if (!isVideo && item.cloudinaryUrl) {
     thumbUrl = getOptimizedCloudinaryUrl(item.cloudinaryUrl, 400);
   }
@@ -430,7 +445,7 @@ function openEditModal(item) {
   toggleMediaFields();
 
   if (item.mediaType === "video") {
-    inputVimeoId.value = item.vimeoId;
+    inputVimeoId.value = item.vimeoId || item.youtubeId || "";
   } else {
     inputImage.required = false; 
     document.getElementById("galleryImageHint").textContent = "Editing image file is not supported. Please delete and recreate if you need to change the photo.";
@@ -494,10 +509,18 @@ galleryForm.addEventListener("submit", async (e) => {
 
       const updateData = { category };
       if (mediaType === "video") {
-        const rawVimeo = inputVimeoId.value.trim();
-        const vId = extractVimeoId(rawVimeo);
-        if (!vId) throw new Error("Vimeo link or ID is required.");
-        updateData.vimeoId = vId;
+        const rawVideo = inputVimeoId.value.trim();
+        const vId = extractVimeoId(rawVideo);
+        const yId = extractYoutubeId(rawVideo);
+        if (vId) {
+          updateData.vimeoId = vId;
+          updateData.youtubeId = null;
+        } else if (yId) {
+          updateData.youtubeId = yId;
+          updateData.vimeoId = null;
+        } else {
+          throw new Error("Valid Vimeo or YouTube link/ID is required.");
+        }
       }
 
       await updateDoc(doc(db, "gallery", inputId.value), updateData);
@@ -607,9 +630,10 @@ galleryForm.addEventListener("submit", async (e) => {
       galleryModalSubmit.classList.add('is-loading');
       galleryModalSubmit.textContent = "Saving Video...";
 
-      const rawVimeo = inputVimeoId.value.trim();
-      const vimeoId = extractVimeoId(rawVimeo);
-      if (!vimeoId) throw new Error("Vimeo link or ID is required.");
+      const rawVideo = inputVimeoId.value.trim();
+      const vId = extractVimeoId(rawVideo);
+      const yId = extractYoutubeId(rawVideo);
+      if (!vId && !yId) throw new Error("Valid Vimeo or YouTube link/ID is required.");
 
       const maxOrder = currentGalleryItems.reduce((max, item) => Math.max(max, item.order || 0), 0);
       const newOrder = maxOrder + 1;
@@ -619,11 +643,13 @@ galleryForm.addEventListener("submit", async (e) => {
       const docData = {
         category,
         mediaType: "video",
-        vimeoId,
         tiltClass,
         order: newOrder,
         createdAt: serverTimestamp()
       };
+      
+      if (vId) docData.vimeoId = vId;
+      if (yId) docData.youtubeId = yId;
 
       const newDocRef = doc(collection(db, "gallery"));
       await setDoc(newDocRef, docData);

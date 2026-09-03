@@ -33,8 +33,10 @@ const inputCategory = document.getElementById("galleryCategory");
 const inputMediaType = document.getElementById("galleryMediaType");
 const inputImage = document.getElementById("galleryImage");
 const inputVimeoId = document.getElementById("galleryVimeoId");
+const inputYoutubeId = document.getElementById("galleryYoutubeId");
 const groupImageUpload = document.getElementById("groupImageUpload");
 const groupVimeoId = document.getElementById("groupVimeoId");
+const groupYoutubeId = document.getElementById("groupYoutubeId");
 
 // DOM Elements - Delete Modal
 const deleteModal = document.getElementById("deleteModal");
@@ -217,9 +219,9 @@ function createAdminGalleryCard(item, index = 0) {
   card.dataset.id = item.id;
   card.style.animationDelay = `${index * 0.05}s`;
 
-  const isVideo = item.mediaType === "video";
+  const isVideo = item.mediaType === "video" || !!item.vimeoId || !!item.youtubeId;
   const badgeClass = isVideo ? "badge-video" : "badge-image";
-  const badgeText = isVideo ? "Video" : "Image";
+  const badgeText = isVideo ? (item.youtubeId ? "YouTube" : "Vimeo") : "Image";
 
   let thumbUrl = "";
   if (isVideo && item.vimeoId) {
@@ -440,17 +442,25 @@ function openEditModal(item) {
   galleryModalTitle.textContent = "Edit Item";
   inputId.value = item.id;
   inputCategory.value = item.category;
-  inputMediaType.value = item.mediaType;
   
-  toggleMediaFields();
-
-  if (item.mediaType === "video") {
-    inputVimeoId.value = item.vimeoId || item.youtubeId || "";
+  if (item.mediaType === "video" || item.vimeoId || item.youtubeId) {
+    if (item.youtubeId) {
+      inputMediaType.value = "youtube";
+      inputYoutubeId.value = item.youtubeId;
+      inputVimeoId.value = "";
+    } else {
+      inputMediaType.value = "vimeo";
+      inputVimeoId.value = item.vimeoId || "";
+      inputYoutubeId.value = "";
+    }
   } else {
+    inputMediaType.value = "image";
     inputImage.required = false; 
     document.getElementById("galleryImageHint").textContent = "Editing image file is not supported. Please delete and recreate if you need to change the photo.";
     inputImage.disabled = true;
   }
+  
+  toggleMediaFields();
 
   galleryModal.showModal();
 }
@@ -463,9 +473,18 @@ function closeModals() {
 inputMediaType.addEventListener("change", toggleMediaFields);
 
 function toggleMediaFields() {
-  if (inputMediaType.value === "video") {
+  if (inputMediaType.value === "youtube") {
     groupImageUpload.style.display = "none";
     inputImage.required = false;
+    groupVimeoId.style.display = "none";
+    inputVimeoId.required = false;
+    groupYoutubeId.style.display = "flex";
+    inputYoutubeId.required = true;
+  } else if (inputMediaType.value === "vimeo") {
+    groupImageUpload.style.display = "none";
+    inputImage.required = false;
+    groupYoutubeId.style.display = "none";
+    inputYoutubeId.required = false;
     groupVimeoId.style.display = "flex";
     inputVimeoId.required = true;
   } else {
@@ -474,6 +493,8 @@ function toggleMediaFields() {
     inputImage.disabled = !!inputId.value; // Disabled on Edit
     groupVimeoId.style.display = "none";
     inputVimeoId.required = false;
+    groupYoutubeId.style.display = "none";
+    inputYoutubeId.required = false;
   }
 }
 
@@ -496,7 +517,7 @@ galleryForm.addEventListener("submit", async (e) => {
   const category = inputCategory.value;
   const mediaType = inputMediaType.value;
   
-  if (!category || !mediaType || (!isEdit && mediaType === "video" && !inputVimeoId.value.trim())) {
+  if (!category || !mediaType || (!isEdit && mediaType === "vimeo" && !inputVimeoId.value.trim()) || (!isEdit && mediaType === "youtube" && !inputYoutubeId.value.trim())) {
     showFormError("Please fill in all required fields.");
     return;
   }
@@ -508,18 +529,20 @@ galleryForm.addEventListener("submit", async (e) => {
       galleryModalSubmit.textContent = "Saving...";
 
       const updateData = { category };
-      if (mediaType === "video") {
-        const rawVideo = inputVimeoId.value.trim();
-        const vId = extractVimeoId(rawVideo);
-        const yId = extractYoutubeId(rawVideo);
-        if (vId) {
-          updateData.vimeoId = vId;
-          updateData.youtubeId = null;
-        } else if (yId) {
+      if (mediaType === "youtube" || mediaType === "vimeo") {
+        updateData.mediaType = "video";
+        if (mediaType === "youtube") {
+          const rawVideo = inputYoutubeId.value.trim();
+          const yId = extractYoutubeId(rawVideo);
+          if (!yId) throw new Error("Valid YouTube link/ID is required.");
           updateData.youtubeId = yId;
           updateData.vimeoId = null;
-        } else {
-          throw new Error("Valid Vimeo or YouTube link/ID is required.");
+        } else if (mediaType === "vimeo") {
+          const rawVideo = inputVimeoId.value.trim();
+          const vId = extractVimeoId(rawVideo);
+          if (!vId) throw new Error("Valid Vimeo link/ID is required.");
+          updateData.vimeoId = vId;
+          updateData.youtubeId = null;
         }
       }
 
@@ -630,10 +653,16 @@ galleryForm.addEventListener("submit", async (e) => {
       galleryModalSubmit.classList.add('is-loading');
       galleryModalSubmit.textContent = "Saving Video...";
 
-      const rawVideo = inputVimeoId.value.trim();
-      const vId = extractVimeoId(rawVideo);
-      const yId = extractYoutubeId(rawVideo);
-      if (!vId && !yId) throw new Error("Valid Vimeo or YouTube link/ID is required.");
+      let vId = null, yId = null;
+      if (mediaType === "youtube") {
+        const rawVideo = inputYoutubeId.value.trim();
+        yId = extractYoutubeId(rawVideo);
+        if (!yId) throw new Error("Valid YouTube link/ID is required.");
+      } else if (mediaType === "vimeo") {
+        const rawVideo = inputVimeoId.value.trim();
+        vId = extractVimeoId(rawVideo);
+        if (!vId) throw new Error("Valid Vimeo link/ID is required.");
+      }
 
       const maxOrder = currentGalleryItems.reduce((max, item) => Math.max(max, item.order || 0), 0);
       const newOrder = maxOrder + 1;

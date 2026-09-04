@@ -93,64 +93,14 @@ async function loadGalleryItems() {
     selectedItemIds.clear();
     updateBulkActionUI();
 
-const DEFAULT_SEED_GALLERY = [
-  { category: "weddings", mediaType: "image", image: "/assets/images/img1.webp", order: 1 },
-  { category: "portraits", mediaType: "image", image: "/assets/images/img2.webp", order: 2 },
-  { category: "destinations", mediaType: "image", image: "/assets/images/img3.webp", order: 3 },
-  { category: "editorial", mediaType: "image", image: "/assets/images/img4.webp", order: 4 },
-  { category: "weddings", mediaType: "image", image: "/assets/images/img5.webp", order: 5 },
-  { category: "destinations", mediaType: "image", image: "/assets/images/img6.webp", order: 6 },
-  { category: "portraits", mediaType: "image", image: "/assets/images/img7.webp", order: 7 },
-  { category: "editorial", mediaType: "image", image: "/assets/images/img8.webp", order: 8 },
-  { category: "weddings", mediaType: "image", image: "/assets/images/img9.webp", order: 9 },
-  { category: "portraits", mediaType: "image", image: "/assets/images/img10.webp", order: 10 },
-  { category: "destinations", mediaType: "image", image: "/assets/images/img11.webp", order: 11 },
-  { category: "editorial", mediaType: "image", image: "/assets/images/img12.webp", order: 12 },
-  { category: "weddings", mediaType: "image", image: "/assets/images/img13.webp", order: 13 },
-  { category: "portraits", mediaType: "image", image: "/assets/images/img14.webp", order: 14 },
-  { category: "destinations", mediaType: "image", image: "/assets/images/img15.webp", order: 15 },
-  { category: "editorial", mediaType: "image", image: "/assets/images/img16.webp", order: 16 },
-  { category: "weddings", mediaType: "image", image: "/assets/images/img17.webp", order: 17 },
-  { category: "portraits", mediaType: "image", image: "/assets/images/img18.webp", order: 18 },
-  { category: "destinations", mediaType: "image", image: "/assets/images/img19.webp", order: 19 },
-  { category: "editorial", mediaType: "image", image: "/assets/images/img20.webp", order: 20 },
-  { category: "weddings", mediaType: "image", image: "/assets/images/img21.webp", order: 21 },
-  { category: "portraits", mediaType: "image", image: "/assets/images/img22.webp", order: 22 },
-  { category: "destinations", mediaType: "image", image: "/assets/images/img23.webp", order: 23 },
-  { category: "editorial", mediaType: "image", image: "/assets/images/img24.webp", order: 24 },
-  { category: "weddings", mediaType: "image", image: "/assets/images/img25.webp", order: 25 },
-  { category: "destinations", mediaType: "image", image: "/assets/images/img28.webp", order: 26 },
-  { category: "portraits", mediaType: "image", image: "/assets/images/img30.webp", order: 27 }
-];
 
-async function seedDefaultGallery() {
-  try {
-    loadingState.style.display = "grid";
-    emptyState.style.display = "none";
-    for (const item of DEFAULT_SEED_GALLERY) {
-      const newRef = doc(collection(db, "gallery"));
-      await setDoc(newRef, { ...item, createdAt: serverTimestamp() });
-    }
-    await loadGalleryItems();
-    if (window.showAppPopup) {
-      window.showAppPopup("Gallery Seeded", "🎉 Successfully imported 27 KVM Creations Studio portfolio items into database!", "success");
-    }
-  } catch (err) {
-    console.error("[Admin Gallery] Seed Error:", err);
-    alert("Failed to seed default gallery items: " + err.message);
-    loadGalleryItems();
-  }
-}
 
     if (currentGalleryItems.length === 0) {
       loadingState.style.display = "none";
       emptyState.style.display = "block";
       emptyState.innerHTML = `
         <p>No gallery items found in KVM Creations Studio database.</p>
-        <button type="button" id="btnSeedGallery" class="btn-primary" style="margin-top: 14px;">+ Import KVM Portfolio Photos (27 Items)</button>
       `;
-      const btnSeed = document.getElementById("btnSeedGallery");
-      if (btnSeed) btnSeed.addEventListener("click", seedDefaultGallery);
       return;
     }
 

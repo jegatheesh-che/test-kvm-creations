@@ -65,70 +65,7 @@ onAuthStateChanged(auth, (user) => {
 // Tab switching is managed globally across Gallery, Reviews, and About sections in admin-about.js
 
 // ================================================
-const DEFAULT_SEED_REVIEWS = [
-  {
-    name: "Priya & Aarav",
-    subtitle: "Toronto, Canada • Wedding & Film",
-    stars: 5,
-    category: "wedding",
-    text: "Mathu & Vithu were absolute dreams to work with! From the morning prep to the late-night dance floor, KVM Creations Studio captured every emotion and detail of our wedding day so beautifully.",
-    badge: "Verified Couple",
-    avatarUrl: "/assets/images/img1.webp",
-    order: 1
-  },
-  {
-    name: "Kavya & Rohan",
-    subtitle: "Vancouver, BC • Destination Wedding",
-    stars: 5,
-    category: "wedding",
-    text: "The cinematic wedding film literally brought our entire family to tears! The colors, editing, and audio design were breathtaking. KVM Creations Studio is truly unmatched.",
-    badge: "Verified Film Client",
-    avatarUrl: "/assets/images/img3.webp",
-    order: 2
-  },
-  {
-    name: "Ananya & Siddharth",
-    subtitle: "Montreal, QC • Editorial & Portrait",
-    stars: 5,
-    category: "portrait",
-    text: "They have a rare gift for capturing subtle nuances of emotion. Our portraits feel intimate, timeless, and regal. We couldn't be happier with our experience!",
-    badge: "Verified Client",
-    avatarUrl: "/assets/images/img7.webp",
-    order: 3
-  },
-  {
-    name: "Deepa & Vignesh",
-    subtitle: "Calgary, AB • Wedding & Film",
-    stars: 5,
-    category: "wedding",
-    text: "From our initial inquiry to receiving our final visual gallery, everything was seamless and professional. Mathu & Vithu preserved moments we didn't even realize happened!",
-    badge: "Verified Couple",
-    avatarUrl: "/assets/images/img9.webp",
-    order: 4
-  }
-];
 
-// ================================================
-// DATA FETCHING & SEEDING
-// ================================================
-async function seedDefaultReviews() {
-  try {
-    loadingState.style.display = "grid";
-    emptyState.style.display = "none";
-    for (const rev of DEFAULT_SEED_REVIEWS) {
-      const newRef = doc(collection(db, "reviews"));
-      await setDoc(newRef, { ...rev, createdAt: serverTimestamp() });
-    }
-    await loadReviewItems();
-    if (window.showToast) {
-      window.showToast("🎉 Initial 6 website reviews imported successfully!", "success");
-    }
-  } catch (err) {
-    console.error("[Admin Reviews] Seed Error:", err);
-    alert("Failed to seed default reviews: " + err.message);
-    loadReviewItems();
-  }
-}
 
 async function loadReviewItems() {
   if (!reviewsGrid || !loadingState) return;
@@ -154,10 +91,7 @@ async function loadReviewItems() {
       emptyState.style.display = "block";
       emptyState.innerHTML = `
         <p>No customer reviews found in database.</p>
-        <button type="button" id="btnSeedReviews" class="btn-primary" style="margin-top: 14px;">+ Import Default Website Reviews (6 Items)</button>
       `;
-      const btnSeed = document.getElementById("btnSeedReviews");
-      if (btnSeed) btnSeed.addEventListener("click", seedDefaultReviews);
       return;
     }
 
@@ -178,13 +112,10 @@ async function loadReviewItems() {
       <p style="font-size: 0.85rem; opacity: 0.85; margin-bottom: 12px;">Error: ${error.message || error}</p>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
         <button type="button" id="btnRetryReviews" class="btn-secondary" style="font-size: 0.85rem; padding: 6px 12px;">🔄 Retry</button>
-        <button type="button" id="btnForceSeed" class="btn-primary" style="font-size: 0.85rem; padding: 6px 12px; margin-top: 0;">+ Seed Initial 6 Reviews</button>
       </div>
     `;
     const btnRetry = document.getElementById("btnRetryReviews");
     if (btnRetry) btnRetry.addEventListener("click", loadReviewItems);
-    const btnForceSeed = document.getElementById("btnForceSeed");
-    if (btnForceSeed) btnForceSeed.addEventListener("click", seedDefaultReviews);
   }
 }
 

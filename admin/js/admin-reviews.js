@@ -229,6 +229,17 @@ function createAdminReviewCard(item, index = 0) {
   card.querySelector(".btn-edit").addEventListener("click", () => openEditModal(item));
   card.querySelector(".btn-delete").addEventListener("click", () => openDeleteModal(item));
 
+  // Fade-in avatar on load (prevents pop-in flash)
+  const avatarEl = card.querySelector('.admin-review-card__avatar');
+  if (avatarEl) {
+    if (avatarEl.complete && avatarEl.naturalWidth > 0) {
+      avatarEl.classList.add('loaded');
+    } else {
+      avatarEl.addEventListener('load', () => avatarEl.classList.add('loaded'));
+      avatarEl.addEventListener('error', () => avatarEl.classList.add('loaded'));
+    }
+  }
+
   return card;
 }
 

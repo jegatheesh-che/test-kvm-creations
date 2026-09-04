@@ -449,7 +449,7 @@ body {
 
 .skeleton-img {
   width: 100%;
-  aspect-ratio: 16/9;
+  aspect-ratio: 4/3;
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -458,19 +458,19 @@ body {
 }
 
 .skeleton-text {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.07);
   border-radius: 4px;
   margin-bottom: 8px;
 }
 
 .skeleton-title {
-  height: 20px;
+  height: 18px;
   width: 70%;
   margin-bottom: 12px;
 }
 
 .skeleton-meta {
-  height: 14px;
+  height: 13px;
   width: 40%;
 }
 
@@ -494,34 +494,71 @@ body {
   border-radius: 4px;
 }
 
-/* Shimmer Animation */
-.skeleton-img, .skeleton-text, .skeleton-btn {
+/* Review skeleton specific */
+.skeleton-review-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.skeleton-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
   position: relative;
   overflow: hidden;
 }
 
-.skeleton-img::after, .skeleton-text::after, .skeleton-btn::after {
+.skeleton-review-info {
+  flex: 1;
+}
+
+.skeleton-review-body {
+  height: 13px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.skeleton-review-body-sm {
+  height: 13px;
+  width: 75%;
+  margin-bottom: 0;
+}
+
+/* Shimmer Animation — applied to all skeleton elements */
+.skeleton-img,
+.skeleton-text,
+.skeleton-btn,
+.skeleton-avatar {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-img::after,
+.skeleton-text::after,
+.skeleton-btn::after,
+.skeleton-avatar::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   transform: translateX(-100%);
   background-image: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.05) 20%,
-    rgba(255, 255, 255, 0.1) 60%,
-    rgba(255, 255, 255, 0)
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.08) 70%,
+    rgba(255, 255, 255, 0) 100%
   );
-  animation: shimmer 2s infinite;
+  animation: shimmer 1.6s infinite;
 }
 
 @keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 /* =========================================
@@ -540,12 +577,25 @@ body {
   }
 }
 
-/* Hide real images until loaded */
+/* Gallery card image — shows shimmer background while loading, fades in smoothly */
 .admin-gallery-item__thumb {
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.35s ease;
+  background: rgba(255, 255, 255, 0.04);
+  position: relative;
 }
+
 .admin-gallery-item__thumb.loaded {
+  opacity: 1;
+  background: none;
+}
+
+/* Review card avatar — fade in on load */
+.admin-review-card__avatar {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.admin-review-card__avatar.loaded {
   opacity: 1;
 }
 

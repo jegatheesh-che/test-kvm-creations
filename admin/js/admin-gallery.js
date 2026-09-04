@@ -307,6 +307,59 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
+// ================================================
+// SILENT IMAGE COMPRESSION (WebP, max 200KB)
+// Runs invisibly before every image upload — no UI changes.
+// ================================================
+function compressToWebP(file, { maxWidth = 1920, targetSizeKB = 200, minQuality = 0.55 } = {}) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        // Step 1: Calculate dimensions (resize if wider than maxWidth)
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Step 2: Adaptive quality loop — reduce until under targetSizeKB
+        const targetBytes = targetSizeKB * 1024;
+        let quality = 0.88;
+
+        function tryEncode() {
+          canvas.toBlob((blob) => {
+            if (!blob) { resolve(file); return; } // Fallback to original on failure
+            if (blob.size <= targetBytes || quality <= minQuality) {
+              // Done — wrap blob as a File with .webp extension
+              const originalName = file.name.replace(/\.[^/.]+$/, '');
+              const compressed = new File([blob], `${originalName}.webp`, { type: 'image/webp' });
+              resolve(compressed);
+            } else {
+              quality = Math.max(minQuality, quality - 0.07);
+              tryEncode();
+            }
+          }, 'image/webp', quality);
+        }
+
+        tryEncode();
+      };
+      img.onerror = () => resolve(file); // Fallback to original on error
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(file); // Fallback to original on error
+    reader.readAsDataURL(file);
+  });
+}
+
 // XHR Cloudinary Upload Helper with Real-time Byte Progress Tracking
 function uploadToCloudinaryWithProgress(file, onProgress) {
   return new Promise((resolve, reject) => {
@@ -578,7 +631,7 @@ galleryForm.addEventListener("submit", async (e) => {
       let uploadedCount = 0;
 
       for (let i = 0; i < totalFiles; i++) {
-        const file = files[i];
+        const rawFile = files[i];
         const cardEl = document.querySelector(`.preview-thumb-card[data-index="${i}"]`);
         const pillEl = document.getElementById(`prevPill_${i}`);
 
@@ -589,7 +642,10 @@ galleryForm.addEventListener("submit", async (e) => {
         if (pillEl) pillEl.textContent = "Uploading...";
 
         uploadProgressCount.textContent = `${i + 1} / ${totalFiles}`;
-        uploadProgressStepText.textContent = `Uploading "${file.name}"...`;
+        uploadProgressStepText.textContent = `Uploading "${rawFile.name}"...`;
+
+        // Silently compress to WebP (<= 200KB) before uploading — no UI changes
+        const file = await compressToWebP(rawFile);
 
         // Upload with byte-level progress
         const uploadData = await uploadToCloudinaryWithProgress(file, (filePercent) => {

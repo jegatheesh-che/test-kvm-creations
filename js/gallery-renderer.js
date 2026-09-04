@@ -45,7 +45,8 @@ async function loadDynamicGallery() {
     const querySnapshot = await getDocs(collection(db, "gallery"));
 
     if (querySnapshot.empty) {
-      console.log("[Firestore Gallery] No items in /gallery collection. Retaining static HTML portfolio.");
+      console.log("[Firestore Gallery] No items in /gallery collection. Clearing gallery.");
+      galleryMasonry.innerHTML = '<p style="width: 100%; text-align: center; padding: 60px 20px; color: #bd9b52; font-size: 1.2rem; grid-column: 1 / -1; font-style: italic;">The gallery is currently empty.</p>';
       return;
     }
 

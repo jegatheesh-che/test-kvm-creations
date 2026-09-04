@@ -2412,10 +2412,18 @@ body {
 
 .upload-progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #b8860b 0%, #dfb142 50%, #f7e28b 100%);
+  background: linear-gradient(270deg, #ff3366, #ff9933, #00cc99, #0099ff, #9933ff);
+  background-size: 400% 400%;
   border-radius: 20px;
-  transition: width 0.2s ease-out;
-  box-shadow: 0 0 12px rgba(223, 177, 66, 0.6);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 15px rgba(0, 204, 153, 0.5), 0 0 5px rgba(255, 51, 102, 0.5);
+  animation: colorfulUpload 3s ease infinite;
+}
+
+@keyframes colorfulUpload {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .upload-progress-step-detail {

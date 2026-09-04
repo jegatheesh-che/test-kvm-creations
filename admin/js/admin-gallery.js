@@ -639,13 +639,21 @@ galleryForm.addEventListener("submit", async (e) => {
           cardEl.classList.remove('ready', 'done', 'error');
           cardEl.classList.add('uploading');
         }
-        if (pillEl) pillEl.textContent = "Uploading...";
+        if (pillEl) pillEl.textContent = "Processing...";
 
         uploadProgressCount.textContent = `${i + 1} / ${totalFiles}`;
-        uploadProgressStepText.textContent = `Uploading "${rawFile.name}"...`;
+        
+        // Show Compressing state
+        uploadProgressStepText.textContent = `Optimizing & Compressing "${rawFile.name}"...`;
+        
+        // Add a small delay so the UI can update before heavy compression blocks the main thread
+        await new Promise(resolve => setTimeout(resolve, 50));
 
         // Silently compress to WebP (<= 200KB) before uploading — no UI changes
         const file = await compressToWebP(rawFile);
+        
+        if (pillEl) pillEl.textContent = "Uploading...";
+        uploadProgressStepText.textContent = `Uploading "${file.name}" to cloud...`;
 
         // Upload with byte-level progress
         const uploadData = await uploadToCloudinaryWithProgress(file, (filePercent) => {

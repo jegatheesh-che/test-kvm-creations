@@ -58,22 +58,22 @@ function createReviewCardDOM(item, index = 0) {
 
   card.innerHTML = `
     <div>
-      <div class="review-card__header" style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
-        <div class="review-card__avatar" style="width: 54px; height: 54px; border-radius: 50%; overflow: hidden; border: 1px solid var(--clr-gold);">
-          <img src="${avatarSrc}" alt="${item.name || 'Client'}" style="width: 100%; height: 100%; object-fit: cover;" />
+      <div class="review-card__header">
+        <div class="review-card__avatar">
+          <img src="${avatarSrc}" alt="${item.name || 'Client'}" />
         </div>
         <div>
-          <h3 class="review-card__name" style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--clr-fg); font-weight: 400; margin: 0;">${item.name || 'Anonymous Couple'}</h3>
-          <p class="review-card__location" style="font-family: var(--font-sans); font-size: 0.82rem; color: var(--clr-gold); margin-top: 4px;">${item.subtitle || 'Client Story'}</p>
+          <h3 class="review-card__name">${item.name || 'Anonymous Couple'}</h3>
+          <p class="review-card__location">${item.subtitle || 'Client Story'}</p>
         </div>
       </div>
-      <div class="review-card__stars" style="color: var(--clr-gold); font-size: 1.1rem; margin-bottom: 16px;">${starsString}</div>
-      <p class="review-card__text" style="font-family: var(--font-sans); font-size: 0.96rem; color: var(--clr-fg-muted); line-height: 1.7; font-style: italic; margin-bottom: 24px;">
+      <div class="review-card__stars">${starsString}</div>
+      <p class="review-card__text">
         &ldquo;${item.text || ''}&rdquo;
       </p>
     </div>
-    <div class="review-card__footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 16px;">
-      <span class="review-card__badge" style="font-family: var(--font-sans); font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; color: var(--clr-gold); font-weight: 600;">${item.badge || 'Verified Client'}</span>
+    <div class="review-card__footer">
+      <span class="review-card__badge">${item.badge || 'Verified Client'}</span>
     </div>
   `;
 

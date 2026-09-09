@@ -289,8 +289,17 @@ Actions Taken:
 - Purged title attributes and title fields across all admin JS modules (`admin-gallery.js`, `admin-about.js`).
 - The entire website and admin panel now operate 100% title-free!
 
+--------------------------------------------------------------------------------
+
+[2026-09-09 21:05:00 IST]
+User Prompt: in gallery page i need a new categry name film - add properly in admin panel also
+Actions Taken:
+- Added "Film" category filter button (<button class="filter-btn" data-filter="film">Film</button>) to the portfolio filter tabs in `gallery.html`.
+- Updated `js/main.js` and `js/gallery-renderer.js` to normalize and match both 'film' and legacy 'films' categories in live filtering, dynamic card rendering, and full-screen lightbox modal captioning.
+- Updated `admin/index.html` modal category selector `<select id="galleryCategory">` to include `<option value="film">Film</option>`.
+- Added interactive category filter pills (`All Works`, `Weddings`, `Film`, `Portraits`, `Destinations`, `Editorial`) to the Admin Gallery Manager (`admin/index.html`).
+- Added responsive styling for admin filter pills and category labels in `admin/css/admin.css` supporting both dark and light luxury themes.
+- Enhanced `admin/js/admin-gallery.js` to filter admin gallery items dynamically by category pill, display normalized "Film" labels on cards, handle edit modal category selections, and show proper category feedback in notifications.
+
 ================================================================================
-
-
-
 

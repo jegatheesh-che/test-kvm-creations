@@ -93,6 +93,16 @@
           </div>
         </header>
 
+        <!-- CATEGORY FILTER TABS -->
+        <div class="admin-gallery-filters" id="adminGalleryFilters">
+          <button type="button" class="admin-filter-pill active" data-admin-filter="all">All Works</button>
+          <button type="button" class="admin-filter-pill" data-admin-filter="weddings">Weddings</button>
+          <button type="button" class="admin-filter-pill" data-admin-filter="films">Films</button>
+          <button type="button" class="admin-filter-pill" data-admin-filter="portraits">Portraits</button>
+          <button type="button" class="admin-filter-pill" data-admin-filter="destinations">Destinations</button>
+          <button type="button" class="admin-filter-pill" data-admin-filter="editorial">Editorial</button>
+        </div>
+
         <div id="adminGalleryLoading" class="admin-gallery-grid">
           <div class="admin-gallery-item skeleton-card"><div class="skeleton-img"></div><div class="skeleton-info"><div class="skeleton-text skeleton-title"></div><div class="skeleton-text skeleton-meta"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
           <div class="admin-gallery-item skeleton-card"><div class="skeleton-img"></div><div class="skeleton-info"><div class="skeleton-text skeleton-title"></div><div class="skeleton-text skeleton-meta"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
@@ -297,7 +307,7 @@
           <label for="reviewCategory">Category Filter *</label>
           <select id="reviewCategory" required class="admin-select">
             <option value="wedding" selected>Wedding</option>
-            <option value="film">Cinematic Film</option>
+            <option value="films">Cinematic Films</option>
             <option value="portrait">Portrait</option>
           </select>
         </div>

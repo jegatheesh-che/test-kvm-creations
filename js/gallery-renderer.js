@@ -81,7 +81,8 @@ async function loadDynamicGallery() {
         card.classList.add(`gallery-card--${item.tiltClass}`);
       }
 
-      const category = (item.category || "uncategorized").toLowerCase().trim();
+      let category = (item.category || "uncategorized").toLowerCase().trim();
+      if (category === "film") category = "films";
       card.setAttribute("data-category", category);
 
       const isVideo = item.mediaType === "video" || !!item.vimeoId || !!item.youtubeId;

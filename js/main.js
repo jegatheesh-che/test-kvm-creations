@@ -484,7 +484,11 @@ function bindGalleryFilters() {
           gsap.killTweensOf(card);
           const cardCategory = (card.getAttribute('data-category') || '').toLowerCase().trim();
           
-          if (filterValue === 'all' || cardCategory === filterValue) {
+          const isMatch = filterValue === 'all' || 
+                          cardCategory === filterValue || 
+                          ((filterValue === 'film' || filterValue === 'films') && (cardCategory === 'film' || cardCategory === 'films'));
+          
+          if (isMatch) {
             card.style.display = 'inline-block';
             gsap.to(card, {
               opacity: 1,
@@ -564,7 +568,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = activeCardsArray[currentIndex];
       const img = card.querySelector('img');
       const rawCat = card.getAttribute('data-category') || 'Portfolio';
-      const cat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
+      let cat = rawCat.charAt(0).toUpperCase() + rawCat.slice(1);
+      if (rawCat.toLowerCase() === 'films' || rawCat.toLowerCase() === 'film') {
+        cat = 'Films';
+      }
       
       const vimeoId = card.getAttribute('data-vimeo-id');
       const youtubeId = card.getAttribute('data-youtube-id');
@@ -604,7 +611,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const visibleCards = allCards.filter(c => {
         if (currentFilter === 'all') return true;
         const cat = (c.getAttribute('data-category') || '').toLowerCase().trim();
-        return cat === currentFilter.toLowerCase().trim();
+        const cur = currentFilter.toLowerCase().trim();
+        return cat === cur || ((cur === 'film' || cur === 'films') && (cat === 'film' || cat === 'films'));
       });
 
       activeCardsArray = visibleCards.length > 0 ? visibleCards : allCards;

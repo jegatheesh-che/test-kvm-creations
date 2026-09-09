@@ -60,6 +60,31 @@ const deleteBulkModalError = document.getElementById("deleteBulkModalError");
 let currentGalleryItems = [];
 let itemToDelete = null;
 let selectedItemIds = new Set();
+let currentAdminFilter = "all";
+
+function filterAdminCards(filterVal) {
+  currentAdminFilter = filterVal;
+  const cards = document.querySelectorAll("#adminGalleryGrid .admin-gallery-item");
+  cards.forEach((card) => {
+    const cardCat = (card.dataset.category || "").toLowerCase().trim();
+    const isMatch = filterVal === "all" || 
+                    cardCat === filterVal || 
+                    ((filterVal === "film" || filterVal === "films") && (cardCat === "film" || cardCat === "films"));
+    card.style.display = isMatch ? "flex" : "none";
+  });
+}
+
+function initAdminGalleryFilters() {
+  const filterPills = document.querySelectorAll(".admin-filter-pill");
+  filterPills.forEach((pill) => {
+    pill.addEventListener("click", () => {
+      filterPills.forEach((p) => p.classList.remove("active"));
+      pill.classList.add("active");
+      const filterVal = pill.getAttribute("data-admin-filter") || "all";
+      filterAdminCards(filterVal);
+    });
+  });
+}
 
 // Initialize on auth state change
 onAuthStateChanged(auth, (user) => {
@@ -108,6 +133,8 @@ async function loadGalleryItems() {
       const card = createAdminGalleryCard(item, index);
       galleryGrid.appendChild(card);
     });
+
+    filterAdminCards(currentAdminFilter);
 
     loadingState.style.display = "none";
     galleryGrid.style.display = "grid";
@@ -183,6 +210,11 @@ function createAdminGalleryCard(item, index = 0) {
     thumbUrl = getOptimizedCloudinaryUrl(item.cloudinaryUrl, 400);
   }
 
+  const categoryRaw = (item.category || "").toLowerCase().trim();
+  const categoryVal = categoryRaw === "film" ? "films" : categoryRaw;
+  card.dataset.category = categoryVal;
+  const displayCategory = categoryVal === "films" ? "Films" : (categoryRaw ? categoryRaw.charAt(0).toUpperCase() + categoryRaw.slice(1) : "Uncategorized");
+
   card.innerHTML = `
     <div class="admin-gallery-item__checkbox-wrapper">
       <input type="checkbox" class="admin-gallery-item__checkbox" data-id="${item.id}" />
@@ -190,7 +222,7 @@ function createAdminGalleryCard(item, index = 0) {
     <img src="${thumbUrl}" alt="Gallery Item" class="admin-gallery-item__thumb" loading="lazy" />
     <div class="admin-gallery-item__info">
       <div class="admin-gallery-item__meta">
-        <span class="admin-gallery-item__category">${item.category || 'Uncategorized'}</span>
+        <span class="admin-gallery-item__category">${displayCategory}</span>
         <div class="admin-gallery-item__order-editor">
           <label>Order:</label>
           <input type="number" class="order-input" data-id="${item.id}" value="${item.order || 0}" min="1" max="${currentGalleryItems.length}" />
@@ -444,7 +476,10 @@ function openEditModal(item) {
   resetForm();
   galleryModalTitle.textContent = "Edit Item";
   inputId.value = item.id;
-  inputCategory.value = item.category;
+  
+  let cat = (item.category || "").toLowerCase().trim();
+  if (cat === "film") cat = "films";
+  inputCategory.value = cat;
   
   if (item.mediaType === "video" || item.vimeoId || item.youtubeId) {
     if (item.youtubeId) {
@@ -657,7 +692,8 @@ galleryForm.addEventListener("submit", async (e) => {
           );
         }
         if (window.showAppPopup && totalFiles > 1) {
-          window.showAppPopup("Batch Upload Complete", `Uploaded ${uploadedCount} images to portfolio archive under ${category.toUpperCase()}.`, "success");
+          const catName = (category.toLowerCase() === "film" || category.toLowerCase() === "films") ? "Films" : category.toUpperCase();
+          window.showAppPopup("Batch Upload Complete", `Uploaded ${uploadedCount} images to portfolio archive under ${catName}.`, "success");
         }
         loadGalleryItems();
       }, 700);
@@ -791,7 +827,13 @@ async function handleOrderChange(id, newOrderStr) {
 // ================================================
 function openDeleteModal(item) {
   itemToDelete = item;
-  const displayLabel = item.category ? `Category: ${item.category.toUpperCase()}` : "Selected Gallery Item";
+  let cat = (item.category || "").trim();
+  if (cat.toLowerCase() === "films" || cat.toLowerCase() === "film") {
+    cat = "Film";
+  } else if (cat) {
+    cat = cat.charAt(0).toUpperCase() + cat.slice(1);
+  }
+  const displayLabel = cat ? `Category: ${cat}` : "Selected Gallery Item";
   deleteItemTitle.textContent = displayLabel;
   deleteModalError.style.display = "none";
   deleteModalConfirm.textContent = "Delete Permanently";
@@ -993,3 +1035,6 @@ if (deleteBulkModalCancel) deleteBulkModalCancel.addEventListener("click", () =>
     });
   }
 });
+
+// Initialize Admin Gallery Category Filter Tabs
+initAdminGalleryFilters();

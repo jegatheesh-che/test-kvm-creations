@@ -41,6 +41,17 @@ async function loadDynamicGallery() {
   const galleryMasonry = document.getElementById("galleryMasonry");
   if (!galleryMasonry) return;
 
+  // Render luxury skeleton cards immediately while Firestore data streams in
+  if (!galleryMasonry.hasChildNodes() || galleryMasonry.innerHTML.trim() === "") {
+    galleryMasonry.innerHTML = Array(6)
+      .fill(0)
+      .map(
+        (_, i) =>
+          `<div class="gallery-skeleton-card shimmer" style="height: ${[360, 460, 320, 420, 380, 440][i % 6]}px;"></div>`
+      )
+      .join("");
+  }
+
   try {
     const querySnapshot = await getDocs(collection(db, "gallery"));
 

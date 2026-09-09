@@ -8,7 +8,6 @@
   <link rel="canonical" href="https://www.kvmcreationsstudio.ca/reviews" />
   <!-- Favicons for Google Search & All Devices -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
   <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="48x48" href="assets/images/favicon-48x48.png" />
@@ -41,53 +40,6 @@
   <link rel="stylesheet" href="css/style.css?v=7" />
 </head>
 <body>
-  <!-- LUXURY SKELETON SCREEN -->
-  <div class="page-skeleton" id="pageSkeleton">
-    <div class="skeleton-progress-bar"></div>
-    <div class="skeleton-header">
-      <div class="skeleton-logo-box shimmer"></div>
-      <div class="skeleton-nav-pills">
-        <div class="skeleton-pill shimmer"></div>
-        <div class="skeleton-pill shimmer"></div>
-        <div class="skeleton-pill shimmer"></div>
-        <div class="skeleton-pill shimmer"></div>
-      </div>
-    </div>
-    <div class="skeleton-body">
-      <div class="skeleton-brand-wrap">
-        <div class="skeleton-brand-mark">KVM</div>
-        <div class="skeleton-brand-sub shimmer"></div>
-      </div>
-      <div class="skeleton-hero-lines">
-        <div class="skeleton-line skeleton-line--sm shimmer"></div>
-        <div class="skeleton-line skeleton-line--lg shimmer"></div>
-        <div class="skeleton-line skeleton-line--md shimmer"></div>
-      </div>
-      <div class="skeleton-cards-grid">
-        <div class="skeleton-preview-card shimmer"></div>
-        <div class="skeleton-preview-card shimmer"></div>
-        <div class="skeleton-preview-card shimmer"></div>
-      </div>
-    </div>
-  </div>
-  <script>
-    (function() {
-      const sk = document.getElementById('pageSkeleton');
-      if (!sk) return;
-      function dismiss() {
-        if (!sk.classList.contains('hidden')) {
-          sk.classList.add('hidden');
-          setTimeout(() => sk.remove(), 400);
-        }
-      }
-      if (document.readyState === 'complete') {
-        setTimeout(dismiss, 120);
-      } else {
-        window.addEventListener('load', () => setTimeout(dismiss, 150));
-        setTimeout(dismiss, 500);
-      }
-    })();
-  </script>
   
   <div class="bg-wallpaper">
     <div class="bg-wallpaper__inner"></div>
@@ -98,7 +50,7 @@
   <!-- NAVIGATION -->
   <nav class="nav scrolled" id="nav">
     <a href="home.html" class="nav__logo">
-      <img src="assets/images/img1.webp" alt="KVM Creations Studio" class="nav__logo-img" />
+      <img src="assets/images/favicon-512x512.png" alt="KVM Creations Studio" class="nav__logo-img" />
       <div class="nav__logo-text-group">
         <span class="nav__logo-icon">KVM</span>
         <span class="nav__logo-text">Creations Studio</span>

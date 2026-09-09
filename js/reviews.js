@@ -51,7 +51,6 @@ function createReviewCardDOM(item, index = 0) {
   const card = document.createElement("article");
   card.className = "review-card reveal";
   card.dataset.category = item.category || "wedding";
-  card.style.cssText = "background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(201, 168, 76, 0.15); border-radius: 16px; padding: 32px; backdrop-filter: blur(10px); display: flex; flex-direction: column; justify-content: space-between;";
 
   const defaultAvatar = "assets/images/img1.webp";
   const avatarSrc = item.avatarUrl || defaultAvatar;

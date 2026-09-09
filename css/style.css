@@ -3221,11 +3221,19 @@ html, body {
 
 /* ===== REVIEW CARD STYLES (reviews page) ===== */
 .review-card {
+  background: #ffffff;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 16px;
+  padding: 32px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   transition: transform 0.4s var(--ease-expo), box-shadow 0.4s ease, border-color 0.4s ease;
 }
 .review-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(201, 168, 76, 0.35) !important;
+  border-color: rgba(201, 168, 76, 0.35);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
